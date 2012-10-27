@@ -1,0 +1,306 @@
+html,body,#map_div {
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	/*background-color: #f1eee8;*/
+	background-color: #000000;
+}
+
+body,#map_div,.info,.info td,#info,#info td,#legend,#about {
+	font-family: Arial, sans-serif;
+}
+
+.info,.info td,#info,#info td,#legend,#legend td,#about {
+	font-size: small;
+}
+
+#map_div,a {
+	color: grey;
+}
+
+.hidden {
+	display: none;	
+}
+
+.minimize {
+    /*
+position: relative;
+    */
+    position: absolute;
+    right: 0px;
+	top: 0px;
+    margin: 3px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.minimize_icon {
+    width: 10px;
+    height: 10px;
+    margin: 6px;
+    background-image: url(../lib/openlayers/img/layer-switcher-minimize.png);
+}
+/*
+#bbox_button, #live_button  {
+	cursor: pointer;
+    float: left;
+}
+*/
+
+#bottom_buttons {
+    left: 0px;
+	bottom: 0px;
+}
+.bottom_buttons_cell {
+    vertical-align: bottom;
+    display: table-cell;
+}
+#legend_border, #about_border {
+    position: relative;
+    float: left;
+    margin-right: 8px;
+    vertical-align: bottom;
+}
+#about_border {
+    /*
+	left: 217px;
+	bottom: 0px;
+	*/
+	max-width: 750px;
+}
+#fileinput_border {
+    left: 38px;
+    top: 0px;
+    
+    /* TODO file input only for Osmosis edition */  
+    display: none;
+}
+
+#bottom_buttons,#fileinput_border,#top_buttons_border,.olControlLayerSwitcher {
+	position: absolute;
+	z-index: 9999;
+	margin: 8px;
+}
+.border,.olControlLayerSwitcher  {
+	border-radius: 4px;
+	padding: 3px;
+	background-color: rgba(255, 255, 255, 0.4);
+}
+
+#legend_content,.info,#info,#about_content,#fileinput_div,.button {
+	padding: 5px;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.7);
+}
+#legend_content,.info,#info,#about_content,#fileinput_div,.olControlLayerSwitcher .layersDiv,.olControlLayerSwitcher .maximizeDiv,.olControlLayerSwitcher .minimizeDiv,.button {
+    border-radius: 4px;
+}
+#top_buttons_border {
+    position: absolute;
+    left: 38px;
+    top: 0px;
+}
+.button {
+    padding: 3px 10px 3px 10px;
+    /* no effect: ??? */
+    -moz-user-select: none;
+    -khtml-user-select: none;
+}
+.left_button {
+    float: left;
+    border-radius: 4px 0px 0px 4px;
+    margin-right: 1px;
+} 
+.right_button {
+    float: left;
+    border-radius: 0px 4px 4px 0px;
+} 
+.inner_button {
+    float: left;
+    margin-right: 1px;
+    border-radius: 0px;
+} 
+#about a {
+	color: white;
+}
+
+.info,#info {
+	overflow: auto;
+}
+
+.info a,#info a {
+	color: white;
+}
+
+.info td,#info td {
+	padding: 1px 5px 1px 5px;
+}
+
+#legend td {
+	padding-left: 5px;
+}
+
+.title {
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.button {
+	font-weight: normal;
+	font-size: small;
+	cursor: pointer;
+}
+
+.info .title,#info .title {
+	margin-top: 5px;
+	padding-left: 5px;
+}
+
+.warning {
+	background-color: rgba(255, 215, 0, 0.8);
+	padding: 5px;
+	font-weight: bold;
+}
+
+td.default {
+	background-color: #323232;
+}
+
+td.keydefault {
+}
+
+td.undefined {
+	background-color: none;
+}
+
+.delete {
+	color: rgba(255, 51, 51, 0.8);
+}
+
+.create {
+	color: rgba(250, 247, 151, 0.6);
+}
+
+.modify_geometry {
+	color: rgba(144, 238, 144, 0.6);
+}
+
+.modify {
+	color: rgba(135, 206, 250, 0.6);
+}
+
+td.deleted {
+	background-color: rgba(255, 51, 51, 0.8); /* #FF3333 */
+}
+
+td.created {
+	/*background-color: rgba(144, 238, 144, 0.6);  lightgreen; #90EE90 */
+	background-color: rgba(250, 247, 151, 0.6); /* yellow #FAF797 */
+}
+
+td.modified {
+	background-color: rgba(135, 206, 250, 0.6); /*lightskyblue;	#87CEFA */
+}
+
+td.legend_created {
+	background-color: #FAF797;
+}
+
+td.legend_deleted {
+	background-color: #FF3333;
+}
+
+td.legend_geom_new {
+	background-color: lightgreen;
+}
+
+td.legend_geom_old {
+	background-color: darkred;
+}
+
+.tagkey {
+	background-color: #323232;
+	/* font-weight: bold; */
+	text-align: left;
+	padding-right: 5px;
+}
+
+.tagsep {
+	height: 6px;
+}
+
+.tagsep hr {
+	display: none;
+	/*
+        height: 1px;
+        border-style: none;
+        background-color: grey;
+        */
+}
+
+/* OpenLayers Zoom Control */
+div.olControlZoom a,.olControlLayerSwitcher .layersDiv,.olControlLayerSwitcher .maximizeDiv {
+	background: #000000 !important;
+	/* fallback for IE - IE6 requires background shorthand*/
+	background: rgba(0, 0, 0, 0.7) !important;
+	filter: alpha(opacity = 70) !important;
+}
+div.olControlZoom a:hover,.maximizeDiv.olButton:hover,.button:hover,.button_active {
+	background: #000000 !important; /* fallback for IE */
+	background-color: rgba(0, 0, 0, 0.5) !important;
+	filter: alpha(opacity = 50) !important;
+}
+
+@media only screen and (max-width: 600px) {
+	div.olControlZoom a:hover {
+		background: rgba(0, 0, 0, 0.5) !important;
+	}
+}
+
+/* OpenLayers LayerSwitcher Control */
+.minimizeDiv.olButton:hover,.minimize:hover {
+    background: #000000 !important; /* fallback for IE */
+    background-color: rgba(158, 158, 158, 0.2) !important;
+    filter: alpha(opacity =     50) !important;
+}
+
+.olControlAttribution,.olControlPermalink {
+    font-size: 70% !important;
+    text-align: right;
+}
+.olControlLayerSwitcher {
+    top: 0px;
+    right: 0px;
+    width: auto !important;
+}
+.layerDiv {
+    width: 20em;
+}
+.olControlLayerSwitcher .maximizeDiv,.olControlLayerSwitcher .minimizeDiv {
+    top: 0px !important;
+}
+
+.olControlLayerSwitcher .minimizeDiv {
+    position: relative;
+    top: 0px;
+    right: 0px;
+    margin: 3px;
+}
+
+.maximizeDiv.olButton,.minimizeDiv.olButton {
+    width: 23px;
+    height: 23px;
+}
+
+.maximizeDiv .olAlphaImg {
+    margin: 2px;
+    width: 19px;
+    height: 19px;
+}
+
+.minimizeDiv .olAlphaImg {
+    /* 10x10 */
+    margin: 7px 7px 6px 6px;
+}

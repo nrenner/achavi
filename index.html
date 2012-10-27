@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>achavi - Augmented OSM Change Viewer - alpha</title>
+    <link rel="stylesheet" href="lib/openlayers/theme/default/style.css" type="text/css" />
+    <link rel="stylesheet" href="css/oscviewer.css" type="text/css" />
+  </head>
+  <body>
+    <div id="map_div"></div>
+
+    <div id="bottom_buttons">
+        <div class="bottom_buttons_cell">
+            <div id="legend_border" class="border"> 
+                <div id="legend">
+                    <div id="legend_button" class="button">legend</div>
+                    <div id="legend_content" class="hidden">
+                        <strong>Legend</strong>
+                        <p>
+                        <table>
+                            <tr><td class="legend_created"></td><td>created</td></tr>
+                            <tr><td class="legend_deleted"></td><td>deleted</td></tr>
+                            <tr><td class="modified"></td><td>modified, tags only</td></tr>
+                            <tr><td class="legend_geom_new"></td><td>modified, new geometry</td></tr>
+                            <tr><td class="legend_geom_old"></td><td>modified, old geometry</td></tr>
+                            <tr><td>circle</td><td>node with tags</td></tr>
+                            <tr><td>square</td><td>node without tags</td></tr>
+                        </table>
+                        <div id="legend_minimize" class="minimize">
+                            <div class="minimize_icon"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom_buttons_cell">
+            <div id="about_border" class="border">
+                <div id="about">
+                    <div id="about_button" class="button">about</div>
+                    <div id="about_content" class="hidden">
+                        <strong>achavi - Augmented OSM Change Viewer - alpha</strong>
+                        <p>
+                        Displays updates to OpenStreetMap based on minutely Augmented Diffs provided by Overpass API.
+                        </p>
+                        <p>
+                        Usage:
+                        <ol>
+                            <li>press "bbox", then click and drag to draw bounding box (optional but recommended)</li>
+                            <li>press "live" to load current diff and activate minutely refreshing</li>
+                            <li>press "clear" to remove all loaded changes</li>
+                        </ol>
+                        <ul>
+                            <li>you can also drag & drop diffs onto map from <a href="http://overpass-api.de/augmented_diffs/">Overpass API</a></li>
+                            <li>zoom on changes with shift + drag zoom box</li>
+                        </ul>
+                        </p>
+                        Contact via OSM account: <a href="http://www.openstreetmap.org/user/ikonor">ikonor</a>
+                        <div id="about_minimize">
+                            <div class="minimize_icon"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="fileinput_border" class="border">
+        <div id="fileinput_div">
+            <input id="fileinput" type="file" name="file" />
+        </div>
+    </div>
+    <div id="top_buttons_border" class="border">
+		<div id="bbox_button" class="button left_button">
+			bbox
+		</div>
+        <div id="live_button" class="button inner_button">
+            live
+        </div>
+        <div id="clear_button" class="button right_button">
+            clear
+        </div>
+    </div>
+        
+    <!--
+    <script src="lib/openlayers/OpenLayers.js.gz"></script>
+    -->
+    <script src="lib/openlayers/OpenLayers.js"></script>
+
+    <script src="lib/underscore.js"></script>
+    <script src="lib/moment.min.js"></script>
+
+    <script src="lib/olex.js"></script>
+    <!-- 
+    <script src="../olex/js/OSMMeta.js"></script>
+    <script src="../olex/js/OSMExt.js"></script>
+    <script src="../olex/js/OSC.js"></script>
+    <script src="../olex/js/Request-patch.js"></script>
+    <script src="../olex/js/OSCAugmented.js"></script>
+    <script src="../olex/js/OSCAugmentedDiff.js"></script>
+	<script src="../olex/js/OSCAugmentedDiffIDSorted.js"></script>
+    <script src="../olex/js/OSMChangeset.js"></script>
+    <script src="../olex/js/HoverAndSelectFeature.js"></script>
+    <script src="../olex/js/FileReaderControl.js"></script>
+    <script src="../olex/js/LayerSwitcherBorder.js"></script>
+    <script src="../olex/js/bbox.js"></script>
+    -->
+
+    <script src="js/FormatRegistry.js"></script>
+    <script src="js/OSMChangeStyle.js"></script>
+    <script src="js/oscviewer.js"></script>
+    <script src="js/PopupHandler.js"></script>
+
+    <script src="js/map.js"></script>
+  </body>
+</html>
