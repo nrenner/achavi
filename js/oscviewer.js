@@ -153,13 +153,20 @@ var oscviewer = (function() {
         keys.sort();
         keys = _.unique(keys, true);
 
+        // single column display (no comparison) when same object version
+        // e.g. for modify:geometry on way when only node changed or 
+        // duplicated delete when change version is not available (Osmosis diff)
+        if (oldTags && changeTags && oldTags.version === changeTags.version) {
+            changeTags = undefined;
+        }
+
         infoHtml += printMeta('timestamp', oldTags, changeTags, formatIsoDateTime);
         infoHtml += printMeta('user', oldTags, changeTags, formatOsmLink);
         infoHtml += printMeta('version', oldTags, changeTags);
         infoHtml += printMeta('changeset', oldTags, changeTags, formatOsmLink);
 
         infoHtml += '<tr><td class="tagsep" colspan="3"><hr/></td></tr>';
-        infoHtml += printKeys(keys, oldTags, changeTags, action);
+        infoHtml += printKeys(keys, oldTags, changeTags);
 
         infoHtml += '</table>';
         infoHtml += '</div>';
@@ -200,7 +207,7 @@ var oscviewer = (function() {
         return infoHtml;
     }
 
-    function printKeys(keys, oldTags, changeTags, action) {
+    function printKeys(keys, oldTags, changeTags) {
         var i;
         var oldVal, changeVal;
         var classes;
@@ -209,7 +216,7 @@ var oscviewer = (function() {
             key = keys[i];
             oldVal = oldTags && oldTags[key];
             changeVal = changeTags && changeTags[key];
-            classes = getClasses(oldVal, changeVal, action);
+            classes = (oldTags && changeTags) ? getClasses(oldVal, changeVal) : getDefaultClasses();
             infoHtml += '<tr><td class="tagkey ' + classes.key + '">' + key + '</td>';
             if (oldTags) {
                 infoHtml += '<td class="' + classes.old + '">' + val(oldVal) + '</td>';
@@ -222,22 +229,25 @@ var oscviewer = (function() {
         return infoHtml;
     }
 
-    function getClasses(oldVal, changeVal, action) {
+    function getDefaultClasses() {
         var c = {
             key : 'keydefault',
             old : 'default',
             change : 'default'
         };
+        return c;
+    }
+
+    function getClasses(oldVal, changeVal) {
+        var c = getDefaultClasses();
+
         if (_.isUndefined(oldVal)) {
             c.key = 'created';
             c.old = 'undefined';
             c.change = 'created';
         } else if (_.isUndefined(changeVal)) {
-            // default on delete, because tags themselves are unchanged
-            if (action !== 'delete') {
-                c.key = 'deleted';
-                c.old = 'deleted';
-            }
+            c.key = 'deleted';
+            c.old = 'deleted';
             c.change = 'undefined';
         } else if (oldVal !== changeVal) {
             c.old = 'modified';
