@@ -13,8 +13,6 @@
     var oldSequence = -1;
     liveInterval = null;
 
-    // moment.lang('en-gb');
-
     function addBaseLayers(map) {
 
         //OpenLayers.Layer.OSM.wrapDateLine = false;

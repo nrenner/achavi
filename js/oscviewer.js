@@ -180,7 +180,8 @@ var oscviewer = (function() {
     }
 
     function formatIsoDateTime(dateTimeString) {
-        return moment(dateTimeString).format('L LT');
+        // locale-independent, ISO-like format, but in user's local time zone
+        return moment(dateTimeString).format('YYYY-MM-DD HH:mm');
     }
 
     function formatOsmLink(val, type) {
