@@ -22,20 +22,9 @@
         // OSM zoom levels: 0-18
         var serverResolutions = resolutions.slice(0, 19);
 
-        map.addLayer(new OpenLayers.Layer.OSM("MapBox Graphite cust.", [
-                "http://a.tiles.mapbox.com/v3/nrenner.map-ydf0cnp6/${z}/${x}/${y}.png",
-                "http://b.tiles.mapbox.com/v3/nrenner.map-ydf0cnp6/${z}/${x}/${y}.png",
-                "http://c.tiles.mapbox.com/v3/nrenner.map-ydf0cnp6/${z}/${x}/${y}.png",
-                "http://d.tiles.mapbox.com/v3/nrenner.map-ydf0cnp6/${z}/${x}/${y}.png" ], {
-            wrapDateLine: false,
-            resolutions : resolutions,
-            serverResolutions : resolutions.slice(0, 18),
-            attribution : "<a href='http://mapbox.com/about/maps' target='_blank'>Terms & Feedback (MapBox)</a>"
-        }));
-
         map.addLayer(new OpenLayers.Layer.OSM(null, null, {
             wrapDateLine: false,
-            opacity : 0.3,
+            opacity : 0.2,
             resolutions : resolutions,
             serverResolutions : serverResolutions
         }));
