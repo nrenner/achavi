@@ -8,21 +8,38 @@ function OSMChangeStyle(map) {
 OSMChangeStyle.prototype.getStyleMaps = function() {
     var styleMaps = {};
 
-    var context = {};
+    var context = {
+        getZIndex: function(feature) {
+            var zIndexMap = {
+                'Polygon': 0,
+                'LineString': 1,
+                'Point': 2
+            };
+            var geometryType = feature.geometry.CLASS_NAME.substr(20);
+            return zIndexMap[geometryType] || 0;
+        }
+    };
 
-    // dummy default style to test for unmatched features
+    // default style
     var defaultStyle = new OpenLayers.Style({
+        graphicZIndex: '${getZIndex}',
+        cursor: 'pointer',
+        
+        //dummy values to test for unmatched features
         strokeColor : "#FF00FF",
         strokeWidth : 4,
         strokeOpacity : 1.0,
-		fillColor : 'orange'
+        fillColor : 'orange'
     }, {
         context : context
     });
     var selectStyle = new OpenLayers.Style({
+        graphicZIndex: '${getZIndex}',
+
+        //dummy values to test for unmatched features
         strokeColor : "#FF00FF",
         strokeWidth: 4,
-        strokeOpacity : 1.0,
+        strokeOpacity : 1.0
     }, {
         context : context
     });
