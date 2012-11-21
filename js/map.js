@@ -5,12 +5,9 @@
     var oldUrl = null;
     var changesUrl = null;
 
-	var bboxParam = null;
-
     var hover;
     var renderers = [ "SVG" ]; // Canvas
     var formatRegistry = null;
-    var oldSequence = -1;
     liveInterval = null;
 
     function addBaseLayers(map) {
@@ -35,50 +32,6 @@
         }));
     }
 
-    // options - {Object} Hash containing request, config and requestUrl keys
-    var success = function(options) {
-        // only handle when no success handler defined for this request
-        if (!options.config.success) {
-            var request = options.request;
-            var requestUrl = options.requestUrl;
-            // console.log('headers: ' request.getAllResponseHeaders());
-            var response = request.responseXML || request.responseText;
-            if (response) {
-                handleLoad(response, requestUrl, options.config);
-            } else {
-                console.error('empty response for "' + requestUrl + '" (' + request.status + ' '
-                        + request.statusText + ')');
-            }
-        }
-    };
-    // options - {Object} Hash containing request, config and requestUrl keys
-    var failure = function(options) {
-        // only handle when no failure handler defined for this request
-        if (!options.config.failure) {
-            var request = options.request;
-            var requestUrl = options.requestUrl;
-            console.error('error loading "' + requestUrl + '" (' + request.status + ' ' + request.statusText
-                    + ')');
-        }
-    };
-
-    // register global events to get handlers called with options parameter with config and requestUrl
-    // instead of just request
-    // note: events are triggered for *all* Requests 
-    OpenLayers.Request.events.on({
-        success: success,
-        failure: failure
-    });
-
-    function GET(config) {
-        console.log("requesting " + config.url);
-        console.time("request");
-
-        //OpenLayers.Util.applyDefaults(config, {success: success, failure: failure});
-        
-        OpenLayers.Request.GET(config);
-    }
-    
     function init() {
         OpenLayers.ImgPath = "lib/openlayers/img/";
 
@@ -135,6 +88,8 @@
             rendererOptions: { zIndexing: true }
         });
 
+        var loader = new Loader(handleLoad);
+        
         // OSM file (old)
         var osmXml = null;
         if (oldUrl) {
@@ -152,7 +107,7 @@
 			changesUrl = parameters.url;
 		}
         if (changesUrl) {
-            GET({url: changesUrl, zoomToExtent: !map.getCenter()});
+            loader.GET({url: changesUrl, zoomToExtent: !map.getCenter()});
         }
 
         var formatOptions = {
@@ -210,7 +165,7 @@
         map.addControl(hover);
         hover.activate();
 
-		addControls(map, vectorLayers);
+		addControls(map, vectorLayers, loader);
 
         if (!map.getCenter()) {
             if (old.features.length > 0) {
@@ -256,7 +211,7 @@
         document.getElementById('legend_button').onclick = maximize;
     }
 
-	function addBBoxControl(map) {
+	function addBBoxControl(map, bboxChangeCallback) {
 		// bbox vector layer for drawing
         var bboxLayer = new OpenLayers.Layer.Vector("box", {
             styleMap : bbox.createStyleMap(),
@@ -285,9 +240,8 @@
                 right : toFixed(bounds.right),
                 top : toFixed(bounds.top)
             };
-			//bbox=9.3,47.5,9.8,47.8
-			bboxParam = OpenLayers.String.format('&bbox=${left},${bottom},${right},${top}', box);
-			console.log("box = " + bboxParam);
+			
+			bboxChangeCallback(box);
 		};
         bbox.addControls(map, bboxLayer, {
             update : updateInfo,
@@ -298,31 +252,33 @@
         return bbox;
 	}
 
-    function addControls(map, layers) {
+    function addControls(map, layers, loader) {
         addBottomControls();
-        var bbox = addBBoxControl(map);
 
-        var onBBoxClick = function(e) {
-            bbox.switchActive();
-        };
-        document.getElementById('bbox_button').onclick = onBBoxClick;
-
+        var overpassAPI = new OverpassAPI(loader);
         var onLiveClick = function(e) {
-            //live = !live;
             var ele = document.getElementById('live_button');
+            ele.classList.toggle('button_active');
             if (!liveInterval) {
-                liveLoop();
-                liveInterval = window.setInterval(liveLoop, 60000);
-                ele.className += ' button_active';
+                overpassAPI.loadCurrent();
+                liveInterval = window.setInterval(_.bind(overpassAPI.loadCurrent, overpassAPI), 60000);
             } else {
                 window.clearInterval(liveInterval);
                 liveInterval = null;
-                ele.className = ele.className.replace(' button_active', '');;
                 console.log('live stopped');
             }
         };
         document.getElementById('live_button').onclick = onLiveClick;
 
+        var bboxChangeHandler = function(bbox) {
+            overpassAPI.bbox = bbox;
+        };
+        var bboxControl = addBBoxControl(map, bboxChangeHandler);
+        var onBBoxClick = function(e) {
+            bboxControl.switchActive();
+        };
+        document.getElementById('bbox_button').onclick = onBBoxClick;
+        
         var onClearClick = function(e) {
             for (var i = 0; i < layers.length; i++) {
                 layers[i].removeAllFeatures();
@@ -382,71 +338,6 @@
                     map.zoomToExtent(changes.getDataExtent());
                 }
             }
-        }
-    }
-
-    function getCurrentSequence() {
-        var sequence = -1;
-        var url = "http://overpass-api.de/augmented_diffs/state.txt";
-        //console.log("requesting " + url);
-
-        OpenLayers.Request.GET({
-            url: url,
-            async: false, 
-            disableXRequestedWith: true,
-            success: function(request) {
-                var response = request.responseText;
-                if (response) {
-                    sequence = parseInt(response);
-                } else {
-                    console.error('empty response for "' + url + '" (' + request.status + ' '
-                            + request.statusText + ')');
-                }
-            }
-        });        
-        return sequence;
-    }
-
-    function getCurrentSequenceEstimate(sequenceReference) {
-        // lag in milliseconds between osmBase and diff availability (guess)
-        var adjustment = 100000; 
-        var currentTimestamp = new Date().getTime();
-        var minuteDiff = Math.floor(((currentTimestamp - sequenceReference.timestamp) - adjustment) / 60000);
-        var currentSequence = sequenceReference.number + minuteDiff;
-        return {
-            number : currentSequence,
-            timestamp : currentTimestamp
-        };
-    }
-
-    function getSequenceUrl(sequence) {
-        var s = sequence.toString();
-        s = "000000000".substring(0, 9 - s.length) + s;
-        var path = {
-            a : s.substring(0, 3),
-            b : s.substring(3, 6),
-            c : s.substring(6, 9)
-        };
-        //var urlFormat = 'http://overpass-api.de/augmented_diffs/${a}/${b}/${c}.osc.gz';
-        var urlFormat = 'http://overpass-api.de/augmented_diffs/id_sorted/${a}/${b}/${c}.osc.gz';
-       
-        var url = OpenLayers.String.format(urlFormat, path);
-        return url;
-    }
-
-    function liveLoop() {
-        var sequence = getCurrentSequence();
-        if (sequence && sequence >= 0 && sequence != oldSequence) {
-            oldSequence = sequence;
-            // getting empty response for current diff, so for now use previous instead (- 1)
-            var url = "http://overpass-api.de/api/augmented_diff?id=" + (sequence - 1);
-            //var url = getSequenceUrl(sequence);
-    		if (bboxParam) {
-    			url += bboxParam;
-    		}
-            GET({url: url, zoomToExtent: false, disableXRequestedWith: true});
-        } else {
-            console.log('skip refresh: sequence = ' + sequence + ', old sequence = ' + oldSequence);
         }
     }
 
