@@ -10,12 +10,43 @@
   <body>
     <div id="map_div"></div>
 
+    <div id="top_control_row">
+        <div id="fileinput_border" class="border">
+            <div id="fileinput_div">
+                <input id="fileinput" type="file" name="file" />
+            </div>
+        </div>
+        <div id="top_buttons_border" class="border">
+            <div id="bbox_button" class="button left_button">
+                bbox
+            </div>
+            <div id="fast_backward_button" class="button inner_button">
+                &lt;&lt;
+            </div>
+            <div id="live_button" class="button inner_button">
+                live
+            </div>
+            <div id="clear_button" class="button right_button">
+                clear
+            </div>
+        </div>
+        <div id="status_bar_border" class="border inner_border">
+            <div id="status_bar" class="text_content">
+                <div>
+                    <span id="status_time">-</span>&nbsp;&#x00B7;
+                    <span id="status_count">-</span>&nbsp;&#x00B7;
+                    <span id="status_sequence">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="bottom_buttons">
         <div class="bottom_buttons_cell">
             <div id="legend_border" class="border"> 
                 <div id="legend">
                     <div id="legend_button" class="button">legend</div>
-                    <div id="legend_content" class="hidden">
+                    <div id="legend_content" class="hidden text_content">
                         <strong>Legend</strong>
                         <p>
                         <table>
@@ -35,10 +66,10 @@
             </div>
         </div>
         <div class="bottom_buttons_cell">
-            <div id="about_border" class="border">
+            <div id="about_border" class="border inner_border">
                 <div id="about">
                     <div id="about_button" class="button">about</div>
-                    <div id="about_content" class="hidden">
+                    <div id="about_content" class="hidden text_content">
                         <strong>achavi - Augmented OSM Change Viewer &nbsp;[alpha]</strong>
                         <p>
                         Displays updates to OpenStreetMap based on minutely 
@@ -89,29 +120,12 @@
                             </li>
                         </ul>
 
-                        <div id="about_minimize">
+                        <div id="about_minimize" class="minimize">
                             <div class="minimize_icon"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div id="fileinput_border" class="border">
-        <div id="fileinput_div">
-            <input id="fileinput" type="file" name="file" />
-        </div>
-    </div>
-    <div id="top_buttons_border" class="border">
-		<div id="bbox_button" class="button left_button">
-			bbox
-		</div>
-        <div id="live_button" class="button inner_button">
-            live
-        </div>
-        <div id="clear_button" class="button right_button">
-            clear
         </div>
     </div>
         
@@ -145,6 +159,9 @@
     <script src="js/PopupHandler.js"></script>
     <script src="js/Loader.js"></script>
     <script src="js/OverpassAPI.js"></script>
+    <script src="js/control/Live.js"></script>
+    <script src="js/control/FastBackward.js"></script>
+    <script src="js/control/Status.js"></script>
 
     <script src="js/map.js"></script>
   </body>

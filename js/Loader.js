@@ -17,6 +17,10 @@ function Loader(loadHandler) {
                 console.error('empty response for "' + requestUrl + '" (' + request.status + ' ' + request.statusText
                         + ')');
             }
+
+            if (options.config.postLoadCallback) {
+                options.config.postLoadCallback();
+            }
         }
     };
 
@@ -27,7 +31,10 @@ function Loader(loadHandler) {
             var request = options.request;
             var requestUrl = options.requestUrl;
             console.error('error loading "' + requestUrl + '" (' + request.status + ' ' + request.statusText + ')');
-        }
+
+            if (options.config.postLoadCallback) {
+                options.config.postLoadCallback();
+            }        }
     };
 
     // register global events to get handlers called with options parameter,

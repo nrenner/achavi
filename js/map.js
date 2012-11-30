@@ -8,7 +8,10 @@
     var hover;
     var renderers = [ "SVG" ]; // Canvas
     var formatRegistry = null;
-    liveInterval = null;
+    fastBackwardInterval = null;
+    sequence = -1;
+    
+    var status; 
 
     function addBaseLayers(map) {
 
@@ -191,24 +194,15 @@
     }
     
     function addBottomControls() {
-        var minimize = function(e) {
-            this.className = 'hidden';
+        var toggle = function(e) {
             var prefix = this.id.substring(0, this.id.indexOf('_')) + '_';
-            document.getElementById(prefix + 'content').className = 'hidden';
-            //document.getElementById('about_minimize').className = 'hidden';
-            document.getElementById(prefix + 'button').className = 'button';
+            document.getElementById(prefix + 'content').classList.toggle('hidden');
+            document.getElementById(prefix + 'button').classList.toggle('hidden');
         };
-        var maximize = function(e) {
-            this.className = 'hidden';
-            var prefix = this.id.substring(0, this.id.indexOf('_')) + '_';
-            document.getElementById(prefix + 'content').className = '';
-            document.getElementById(prefix + 'minimize').className = 'minimize';
-            //document.getElementById('about_button').className = 'hidden';
-        };
-        document.getElementById('about_minimize').onclick = minimize;
-        document.getElementById('about_button').onclick = maximize;
-        document.getElementById('legend_minimize').onclick = minimize;
-        document.getElementById('legend_button').onclick = maximize;
+        document.getElementById('about_minimize').onclick = toggle;
+        document.getElementById('about_button').onclick = toggle;
+        document.getElementById('legend_minimize').onclick = toggle;
+        document.getElementById('legend_button').onclick = toggle;
     }
 
 	function addBBoxControl(map, bboxChangeCallback) {
@@ -255,21 +249,11 @@
     function addControls(map, layers, loader) {
         addBottomControls();
 
-        var overpassAPI = new OverpassAPI(loader);
-        var onLiveClick = function(e) {
-            var ele = document.getElementById('live_button');
-            ele.classList.toggle('button_active');
-            if (!liveInterval) {
-                overpassAPI.loadCurrent();
-                liveInterval = window.setInterval(_.bind(overpassAPI.loadCurrent, overpassAPI), 60000);
-            } else {
-                window.clearInterval(liveInterval);
-                liveInterval = null;
-                console.log('live stopped');
-            }
-        };
-        document.getElementById('live_button').onclick = onLiveClick;
-
+        status = new Status();
+        var overpassAPI = new OverpassAPI(loader, map);
+        new Live(overpassAPI, status); 
+        new FastBackward(overpassAPI, status);
+        
         var bboxChangeHandler = function(bbox) {
             overpassAPI.bbox = bbox;
         };
@@ -314,6 +298,7 @@
                     var obj = format.readAugmenting(doc);
                     osmFeatures = obj.old;
                     oscFeatures = obj.change;
+                    status.timestamp = obj.timestamp;
                 } else {
                     if (format.isAugmented(doc)) {
                         osmFeatures = format.readAugmenting(doc);
@@ -333,6 +318,12 @@
 
                 console.log('features added: changes = ' + oscFeatures.length + ', old = ' + osmFeatures.length
                         + ' - total: changes = ' + changes.features.length + ', old = ' + old.features.length);
+
+                // Chrome memory debugging, requires --enable-memory-info command-line argument
+                if (performance && performance.memory) {
+                    var m = performance.memory;
+                    console.log('memory: used=' + m.usedJSHeapSize + ', total=' + m.totalJSHeapSize + ', limit=' + m.jsHeapSizeLimit);
+                }
 
                 if (!(options && options.zoomToExtent === false)) {
                     map.zoomToExtent(changes.getDataExtent());

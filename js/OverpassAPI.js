@@ -1,9 +1,10 @@
 /**
  * class OverpassAPI
  */
-function OverpassAPI(loader) {
+function OverpassAPI(loader, map) {
     this.loader = loader;
-    this.oldSequence = -1;
+    this.map = map;
+    //this.oldSequence = -1;
     this.bbox = null;
 }
 
@@ -58,6 +59,7 @@ OverpassAPI.prototype.getCurrentSequence = function () {
     return sequence;
 };
 
+/*
 OverpassAPI.prototype.loadCurrent = function() {
     var bboxParam;
     var sequence = this.getCurrentSequence();
@@ -68,7 +70,7 @@ OverpassAPI.prototype.loadCurrent = function() {
         //var url = getSequenceUrl(sequence);
         if (this.bbox) {
             bboxParam = OpenLayers.String.format('&bbox=${left},${bottom},${right},${top}', this.bbox);
-            console.log("box = " + bboxParam);
+            //console.log("box = " + bboxParam);
             url += bboxParam;
         }
         this.loader.GET({
@@ -81,5 +83,31 @@ OverpassAPI.prototype.loadCurrent = function() {
         });
     } else {
         console.log('skip refresh: sequence = ' + sequence + ', old sequence = ' + this.oldSequence);
+    }
+};
+*/
+
+OverpassAPI.prototype.load = function(sequence, postLoadCallback) {
+    var bboxParam;
+    if (sequence && sequence >= 0) {
+        var url = "http://overpass-api.de/api/augmented_diff?id=" + sequence;
+        //var url = getSequenceUrl(sequence);
+        if (!this.bbox) {
+            this.bbox = map.getExtent().transform(map.getProjectionObject(), "EPSG:4326");
+        }
+        bboxParam = OpenLayers.String.format('&bbox=${left},${bottom},${right},${top}', this.bbox);
+        //console.log("box = " + bboxParam);
+        url += bboxParam;
+        this.loader.GET({
+            url: url,
+            // do not zoom to data extent after load; option forwarded to load handler
+            // (option only forwarded when using success event instead of callback)
+            zoomToExtent: false,
+            // do not send X-Requested-With header (option added by olex.Request-patch)
+            disableXRequestedWith: true,
+            postLoadCallback: postLoadCallback
+        });
+    } else {
+        console.log('invalid sequence: "' + sequence + '"');
     }
 };

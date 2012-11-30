@@ -9,11 +9,11 @@ body {
 	background-color: #000000;
 }
 
-body,#map_div,.info,.info td,#info,#info td,#legend,#about {
+body,#map_div,.info,.info td,#info,#info td,#legend,#about,.text_content {
 	font-family: Arial, sans-serif;
 }
 
-.info,.info td,#info,#info td,#legend,#legend td,#about {
+.info,.info td,#info,#info td,#legend,#legend td,#about,.text_content {
 	font-size: small;
 }
 
@@ -59,8 +59,6 @@ position: relative;
 }
 #legend_border, #about_border {
     position: relative;
-    float: left;
-    margin-right: 8px;
     vertical-align: bottom;
 }
 #about_border {
@@ -78,7 +76,8 @@ position: relative;
     display: none;
 }
 
-#bottom_buttons,#fileinput_border,#top_buttons_border,.olControlLayerSwitcher {
+/* #fileinput_border,#top_buttons_border,*/
+#bottom_buttons,#top_control_row,.olControlLayerSwitcher {
 	position: absolute;
 	z-index: 9999;
 	margin: 8px;
@@ -88,25 +87,42 @@ position: relative;
 	padding: 3px;
 	background-color: rgba(255, 255, 255, 0.4);
 }
-
-#legend_content,.info,#info,#about_content,#fileinput_div,.button {
-	padding: 5px;
-	color: white;
-	background-color: rgba(0, 0, 0, 0.7);
+.inner_border {
+    margin-left: 8px;
 }
-#legend_content,.info,#info,#about_content,#fileinput_div,.olControlLayerSwitcher .layersDiv,.olControlLayerSwitcher .maximizeDiv,.olControlLayerSwitcher .minimizeDiv,.button {
+#top_control_row > .border {
+    float: left;
+}
+
+.button,.text_content,.info {
+	padding: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+.button,.info {
+    color: white;
+}
+.text_content,.text_content a {
+    color: #BBB;
+}
+#legend_content,.info,#info,#about_content,#fileinput_div,.olControlLayerSwitcher .layersDiv,.olControlLayerSwitcher .maximizeDiv,.olControlLayerSwitcher .minimizeDiv,.button,.text_content {
     border-radius: 4px;
 }
-#top_buttons_border {
+/* #top_buttons_border */
+#top_control_row {
     position: absolute;
     left: 38px;
     top: 0px;
 }
-.button {
+.button,#status_bar {
     padding: 3px 10px 3px 10px;
-    /* no effect: ??? */
-    -moz-user-select: none;
+}
+.button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
     -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .left_button {
     float: left;
@@ -122,9 +138,6 @@ position: relative;
     margin-right: 1px;
     border-radius: 0px;
 } 
-#about a {
-	color: white;
-}
 
 .info,#info {
 	overflow: auto;
