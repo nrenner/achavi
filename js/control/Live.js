@@ -1,8 +1,10 @@
 /**
  * class Live
  */
-function Live(overpassAPI) {
+function Live(overpassAPI, status) {
     this.overpassAPI = overpassAPI;
+    this.status = status;
+
     this.interval = null;
     this.sequence = -1; 
 
@@ -15,22 +17,29 @@ Live.prototype.load = function() {
         // getting empty response for current diff, so for now use previous instead (- 1)
         currentSequence--;
 
-        if (sequence === -1) {
-            sequence = currentSequence;
-            this.overpassAPI.load(sequence);
+        if (this.sequence === -1) {
+            this.sequence = currentSequence;
+            this.overpassAPI.load(this.sequence, _.bind(this.postLoad, this));
+
         } else { 
-            if (currentSequence > sequence){
-                sequence++;
-                this.overpassAPI.load(sequence);
+            if (currentSequence > this.sequence){
+                this.sequence++;
+                this.overpassAPI.load(this.sequence, _.bind(this.postLoad, this));
             } else {
-                console.log('skip refresh: sequence = ' + sequence + ', current sequence = ' + currentSequence);
+                console.log('skip refresh: sequence = ' + this.sequence + ', current sequence = ' + currentSequence);
             }
         }
     }
 };
 
+Live.prototype.postLoad = function() {
+    this.status.sequence = this.sequence;
+    this.status.count++;
+    this.status.update();
+};
+
 Live.prototype.toggle = function(e) {
-    var ele = document.getElementById('live_button');
+    var ele = e.srcElement;
     ele.classList.toggle('button_active');
     if (!this.interval) {
         this.load();

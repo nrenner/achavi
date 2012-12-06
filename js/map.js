@@ -7,11 +7,8 @@
 
     var hover;
     var renderers = [ "SVG" ]; // Canvas
-    var formatRegistry = null;
-    fastBackwardInterval = null;
-    sequence = -1;
     
-    var status; 
+    var status;
 
     function addBaseLayers(map) {
 
@@ -91,7 +88,8 @@
             rendererOptions: { zIndexing: true }
         });
 
-        var loader = new Loader(handleLoad);
+        status = new Status();
+        var loader = new Loader(map, { changes: changes, old: old }, status);
         
         // OSM file (old)
         var osmXml = null;
@@ -113,15 +111,12 @@
             loader.GET({url: changesUrl, zoomToExtent: !map.getCenter()});
         }
 
+        var fileReaderControl = new FileReaderControl(loader.handleLoad);
+        fileReaderControl.activate();
+
         var formatOptions = {
             internalProjection : map.getProjectionObject()
         };
-
-        formatRegistry = new FormatRegistry(formatOptions);
-
-        var fileReaderControl = new FileReaderControl(handleLoad);
-        fileReaderControl.activate();
-
         var osmFormat = new OpenLayers.Format.OSMExt(formatOptions);
         var oscFormat = new OpenLayers.Format.OSC(formatOptions);
         var augmentedOscFormat = new OpenLayers.Format.OSCAugmented(formatOptions);
@@ -249,7 +244,6 @@
     function addControls(map, layers, loader) {
         addBottomControls();
 
-        status = new Status();
         var overpassAPI = new OverpassAPI(loader, map);
         new Live(overpassAPI, status); 
         new FastBackward(overpassAPI, status);
@@ -271,66 +265,6 @@
         document.getElementById('clear_button').onclick = onClearClick;
 	}
 
-    function handleLoad(doc, fileNameOrUrl, options) {
-        console.timeEnd("request");
-
-        if (typeof doc == "string") {
-            doc = OpenLayers.Format.XML.prototype.read.apply(this, [ doc ]);
-        }
-
-        var desc = formatRegistry.getFormat(doc);
-        var format = desc.format;
-        var oscFeatures = [];
-        var osmFeatures = [];
-        if (format) {
-            if (desc.type === 'osmChangeset') {
-                changesets.addFeatures(format.read(doc));
-                // TODO read corresponding diff
-                map.zoomToExtent(changesets.getDataExtent());
-            } else {
-                console.time("read");
-                if (desc.type === 'osm') {
-                    osmFeatures = format.read(doc);
-
-                    // TODO sync separate file loading
-                    // oscFeatures = oscFormat.read(oscResponse, osmXml);
-                } else if (desc.type === 'osmAugmentedDiff_IDSorted') {
-                    var obj = format.readAugmenting(doc);
-                    osmFeatures = obj.old;
-                    oscFeatures = obj.change;
-                    status.timestamp = obj.timestamp;
-                } else {
-                    if (format.isAugmented(doc)) {
-                        osmFeatures = format.readAugmenting(doc);
-                    }
-                    oscFeatures = format.read(doc);
-                }
-                console.timeEnd("read");
-
-                console.time("setActions");
-                oscviewer.setActions(oscFeatures, osmFeatures);
-                console.timeEnd("setActions");
-
-                console.time("addFeatures");
-                old.addFeatures(osmFeatures);
-                changes.addFeatures(oscFeatures);
-                console.timeEnd("addFeatures");
-
-                console.log('features added: changes = ' + oscFeatures.length + ', old = ' + osmFeatures.length
-                        + ' - total: changes = ' + changes.features.length + ', old = ' + old.features.length);
-
-                // Chrome memory debugging, requires --enable-memory-info command-line argument
-                if (performance && performance.memory) {
-                    var m = performance.memory;
-                    console.log('memory: used=' + m.usedJSHeapSize + ', total=' + m.totalJSHeapSize + ', limit=' + m.jsHeapSizeLimit);
-                }
-
-                if (!(options && options.zoomToExtent === false)) {
-                    map.zoomToExtent(changes.getDataExtent());
-                }
-            }
-        }
-    }
 
     init();
 })();

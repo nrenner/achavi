@@ -8,8 +8,11 @@ function Status() {
 }
 
 Status.prototype.update = function() {
-    var m = moment(this.timestamp.replace('\\:', ':'));
-    document.getElementById('status_time').innerHTML = m.format('HH:mm');
+    var m;
+    if (this.timestamp) {
+        m = moment(this.timestamp.replace('\\:', ':'));
+        document.getElementById('status_time').innerHTML = m.format('HH:mm');
+    }
     document.getElementById('status_count').innerHTML = this.count;
     document.getElementById('status_sequence').innerHTML = this.sequence;
 };
