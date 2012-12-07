@@ -66,6 +66,7 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
             this.layers.changes.addFeatures(oscFeatures);
             console.timeEnd("addFeatures");
 
+            this.status.addChanges(oscFeatures.length);
             console.log('features added: changes = ' + oscFeatures.length + ', old = ' + osmFeatures.length
                     + ' - total: changes = ' + this.layers.changes.features.length + ', old = ' + this.layers.old.features.length);
 
