@@ -47,6 +47,7 @@ Live.prototype.toggle = function(e) {
     } else {
         window.clearInterval(this.interval);
         this.interval = null;
+        this.sequence = -1; 
         console.log('live stopped');
     }
 };

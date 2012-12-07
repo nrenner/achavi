@@ -8,8 +8,13 @@ function FastBackward(overpassAPI, status) {
     this.interval = null;
     this.sequence = -1; 
     this.active = false;
+    
+    // number of sequences (~ 1 per minute)
+    this.limit = 60 * 24; // 24h
+    this.stopSequence = null;
 
-    document.getElementById('fast_backward_button').onclick = _.bind(this.toggle, this);
+    this.element = document.getElementById('fast_backward_button');
+    this.element.onclick = _.bind(this.toggle, this);
 }
 
 FastBackward.prototype.start = function() {
@@ -18,6 +23,7 @@ FastBackward.prototype.start = function() {
         // getting empty response for current diff, so for now use previous instead (- 1)
         currentSequence--;
         this.sequence = currentSequence + 1;
+        this.stopSequence = this.sequence - this.limit;
     } else {
         console.error('invalid current sequence: "' + currentSequence + '"');
     }
@@ -28,7 +34,12 @@ FastBackward.prototype.start = function() {
 
 FastBackward.prototype.load = function() {
     this.sequence--;
-    this.overpassAPI.load(this.sequence, _.bind(this.postLoad, this));
+    if (this.sequence >= this.stopSequence) {
+        this.overpassAPI.load(this.sequence, _.bind(this.postLoad, this));
+    } else {
+        this.stop();
+        console.log('fast backward stopped - limit reached');
+    }
 };
 
 FastBackward.prototype.postLoad = function() {
@@ -43,10 +54,16 @@ FastBackward.prototype.postLoad = function() {
     }
 };
 
+FastBackward.prototype.stop = function() {
+    this.active = false;
+    window.clearTimeout(this.interval); 
+    this.interval = null;
+    this.element.classList.remove('button_active');
+};
+
 FastBackward.prototype.toggle = function(e) {
-    var ele = e.srcElement;
-    ele.classList.toggle('button_active');
     if (!this.active) {
+        this.element.classList.add('button_active');
         this.active = true;
 
         // test
@@ -59,9 +76,7 @@ FastBackward.prototype.toggle = function(e) {
         }
         this.load();
     } else {
-        this.active = false;
-        window.clearTimeout(this.interval); 
-        this.interval = null;
+        this.stop();
         console.log('fast backward timer stopped');
     }
 };

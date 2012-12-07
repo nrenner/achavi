@@ -8,11 +8,23 @@ function Status() {
 }
 
 Status.prototype.update = function() {
-    var m;
+    var unset = '-';
+    var m, sTimestamp = unset, sCount;
     if (this.timestamp) {
         m = moment(this.timestamp.replace('\\:', ':'));
-        document.getElementById('status_time').innerHTML = m.format('HH:mm');
+        sTimestamp = m.format('HH:mm');
     }
-    document.getElementById('status_count').innerHTML = this.count;
-    document.getElementById('status_sequence').innerHTML = this.sequence;
+    sCount = (this.count != 0) ? this.count : unset;
+    
+    document.getElementById('status_time').innerHTML = sTimestamp;
+    document.getElementById('status_count').innerHTML = sCount;
+    document.getElementById('status_sequence').innerHTML = this.sequence || unset;
+};
+
+Status.prototype.reset = function() {
+    this.sequence = null;
+    this.timestamp = null;
+    this.count = 0;
+    
+    this.update();
 };

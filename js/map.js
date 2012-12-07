@@ -261,6 +261,7 @@
             for (var i = 0; i < layers.length; i++) {
                 layers[i].removeAllFeatures();
             }
+            status.reset();
         };
         document.getElementById('clear_button').onclick = onClearClick;
 	}

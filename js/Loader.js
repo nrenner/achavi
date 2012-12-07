@@ -92,6 +92,10 @@ Loader.prototype.success = function(options) {
         var request = options.request;
         var requestUrl = options.requestUrl;
         // console.log('headers: ' request.getAllResponseHeaders());
+        var len = request.responseText.length;
+        if (len > 302) {
+            console.log('size: ' + len);
+        }
         response = request.responseXML || request.responseText;
         if (response) {
             this.handleLoad(response, requestUrl, options.config);
