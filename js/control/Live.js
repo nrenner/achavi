@@ -8,7 +8,8 @@ function Live(overpassAPI, status) {
     this.interval = null;
     this.sequence = -1; 
 
-    document.getElementById('live_button').onclick = _.bind(this.toggle, this);
+    this.element = document.getElementById('live_button');
+    this.element.onclick = _.bind(this.toggle, this);
 }
 
 Live.prototype.load = function() {
@@ -39,8 +40,7 @@ Live.prototype.postLoad = function() {
 };
 
 Live.prototype.toggle = function(e) {
-    var ele = e.srcElement;
-    ele.classList.toggle('button_active');
+    this.element.classList.toggle('button_active');
     if (!this.interval) {
         this.load();
         this.interval = window.setInterval(_.bind(this.load, this), 60000);
