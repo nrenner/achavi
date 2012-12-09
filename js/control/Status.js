@@ -13,6 +13,7 @@ Status.prototype.update = function() {
         sTimestamp = m.format('HH:mm');
     }
     
+    document.getElementById('status_countdown').innerHTML = this.nvl(this.countdown, unset);
     document.getElementById('status_time').innerHTML = sTimestamp;
     document.getElementById('status_count').innerHTML = this.count || unset;
     document.getElementById('status_sequence').innerHTML = this.sequence || unset; 
@@ -21,6 +22,7 @@ Status.prototype.update = function() {
 };
 
 Status.prototype.reset = function() {
+    this.countdown = null;
     this.sequence = null;
     this.timestamp = null;
     this.count = 0;
@@ -41,4 +43,9 @@ Status.prototype.addChanges = function(changes) {
 
 Status.prototype.nvl = function(val, s) {
     return (val !== null) ? val : s;
+};
+
+Status.prototype.setCountdown = function(countdown) {
+    this.countdown = countdown;
+    this.update();
 };

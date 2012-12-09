@@ -33,6 +33,7 @@ FastBackward.prototype.start = function() {
 };
 
 FastBackward.prototype.load = function() {
+    this.status.setCountdown('...');
     this.sequence--;
     if (this.sequence >= this.stopSequence) {
         this.overpassAPI.load(this.sequence, _.bind(this.postLoad, this));
@@ -45,6 +46,7 @@ FastBackward.prototype.load = function() {
 FastBackward.prototype.postLoad = function() {
     this.status.sequence = this.sequence;
     this.status.count++;
+    this.status.countdown = null;
     this.status.update();
 
     if (this.active) {
@@ -59,10 +61,13 @@ FastBackward.prototype.stop = function() {
     window.clearTimeout(this.interval); 
     this.interval = null;
     this.element.classList.remove('button_active');
+    this.status.setCountdown(null);
+    console.timeEnd('fast backward');
 };
 
 FastBackward.prototype.toggle = function(e) {
     if (!this.active) {
+        console.time('fast backward');
         this.element.classList.add('button_active');
         this.active = true;
 
