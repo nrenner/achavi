@@ -9,14 +9,21 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
     var styleMaps = {};
 
     var context = {
-        getZIndex: function(feature) {
-            var zIndexMap = {
-                'Polygon': 0,
-                'LineString': 1,
-                'Point': 2
-            };
+        getZIndex : function(feature) {
             var geometryType = feature.geometry.CLASS_NAME.substr(20);
-            return zIndexMap[geometryType] || 0;
+            switch (geometryType) {
+            case 'Polygon':
+                if (feature.attributes.landuse)
+                    return 10;
+                else
+                    return 20;
+            case 'LineString':
+                return 30;
+            case 'Point':
+                return 40;
+            default:
+                return 0;
+            }
         }
     };
 
