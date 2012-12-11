@@ -5,6 +5,10 @@ function OverpassAPI(loader, map) {
     this.loader = loader;
     this.map = map;
     this.bbox = null;
+    
+    // http://www.overpass-api.de/augmented_diffs/000/008/066.osc.gz
+    // http://www.overpass-api.de/augmented_diffs/id_sorted/000/028/706.osc.gz
+    this.sequenceUrlRegex = /.*overpass-api\.de\/augmented_diffs(?:\/id_sorted|)\/([0-9]{3})\/([0-9]{3})\/([0-9]{3}).osc.gz/;
 }
 
 OverpassAPI.prototype.getSequenceUrl = function(sequence) {
@@ -42,6 +46,15 @@ OverpassAPI.prototype.getCurrentSequence = function () {
         }
     });        
     return sequence;
+};
+
+OverpassAPI.prototype.getSequenceFromUrl = function (url) {
+    return parseFloat(url.replace(this.sequenceUrlRegex, "$1$2$3"));
+};
+
+OverpassAPI.prototype.loadByUrl = function(url) {
+    var sequence = this.getSequenceFromUrl(url);
+    this.load(sequence);
 };
 
 OverpassAPI.prototype.load = function(sequence, postLoadCallback) {

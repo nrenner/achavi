@@ -111,9 +111,6 @@
             loader.GET({url: changesUrl, zoomToExtent: !map.getCenter()});
         }
 
-        var fileReaderControl = new FileReaderControl(loader.handleLoad);
-        fileReaderControl.activate();
-
         var formatOptions = {
             internalProjection : map.getProjectionObject()
         };
@@ -264,6 +261,10 @@
             status.reset();
         };
         document.getElementById('clear_button').onclick = onClearClick;
+        
+        var fileReaderControl = new FileReaderControl(loader.handleLoad);
+        fileReaderControl.addUrlHandler(overpassAPI.sequenceUrlRegex, _.bind(overpassAPI.loadByUrl, overpassAPI));
+        fileReaderControl.activate();
 	}
 
 
