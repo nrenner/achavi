@@ -60,7 +60,7 @@ OverpassAPI.prototype.loadByUrl = function(url) {
 OverpassAPI.prototype.load = function(sequence, postLoadCallback) {
     var bboxParam;
     if (sequence && sequence >= 0) {
-        var url = "http://overpass-api.de/api/augmented_diff?id=" + sequence;
+        var url = "http://overpass-api.de/api/augmented_diff?id=" + sequence + "&info=no";
         //var url = getSequenceUrl(sequence);
         if (!this.bbox) {
             this.bbox = map.getExtent().transform(map.getProjectionObject(), "EPSG:4326");

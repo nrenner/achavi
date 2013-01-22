@@ -19,6 +19,11 @@ function Loader(map, layers, status) {
         failure : failure
     });
     */
+
+    // Reuse XHR instance, seems to reduce memory overhead for subsequent, large requests.
+    // Can handle only one request at a time. For now, reuse one instance only and
+    // create new one when needed (see GET), later include library with instance pool.
+    this.xhr = new XMLHttpRequest();
 }
 
 Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
@@ -49,6 +54,7 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
                 osmFeatures = obj.old;
                 oscFeatures = obj.change;
                 this.status.timestamp = obj.timestamp;
+                console.log(obj.timestamp);
             } else {
                 if (format.isAugmented(doc)) {
                     osmFeatures = format.readAugmenting(doc);
@@ -108,9 +114,6 @@ Loader.prototype.success = function(options) {
         if (options.config.postLoadCallback) {
             options.config.postLoadCallback();
         }
-        if (this.postLoadCallback) {
-            this.postLoadCallback();
-        }
     }
 };
 
@@ -136,7 +139,6 @@ Loader.prototype.GET = function(config) {
     //OpenLayers.Request.GET(config);
 
     var url = config.url;
-    var xhr = new XMLHttpRequest();
 
     /*
     //xhr.onprogress = (function () {
@@ -148,6 +150,17 @@ Loader.prototype.GET = function(config) {
     })();
     */
 
+    var xhr = this.xhr;
+    
+    // If request instance is active (state not UNSENT or DONE)
+    if (xhr.readyState != 0 && xhr.readyState != 4) {
+        // create an additional temp. instance (reusing active instance would abort running request).
+        // Needed when both live and forward/backward controls are active.
+        xhr = new XMLHttpRequest();
+    }
+    
+    xhr.open('GET', url);
+
     var self = this;
     xhr.onload = function(evt) {
         self.success({request: evt.target, config: config, requestUrl: config.url});
@@ -157,6 +170,7 @@ Loader.prototype.GET = function(config) {
         self.failure({request: evt.target, config: config, requestUrl: config.url});
     };
 
-    xhr.open('GET', url);
+    // text only, XML parsing done later for better control over memory issues
+    xhr.overrideMimeType("text/plain");
     xhr.send();
 };
