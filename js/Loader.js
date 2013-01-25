@@ -6,6 +6,11 @@ function Loader(map, layers, status) {
     this.layers = layers;
     this.status = status;
 
+    // Maximum length of XHR responseText. Larger responses are likely to crash the browser, 
+    // either immediately or on subsequent requests with the same size. 
+    // Approximate limit determined by trial and error. 
+    this.responseSizeLimit = 50000000;
+
     var formatOptions = {
         internalProjection : map.getProjectionObject()
     };
@@ -110,10 +115,6 @@ Loader.prototype.success = function(options) {
             console.error('empty response for "' + requestUrl + '" (' + request.status + ' ' + request.statusText
                     + ')');
         }
-
-        if (options.config.postLoadCallback) {
-            options.config.postLoadCallback();
-        }
     }
 };
 
@@ -124,10 +125,14 @@ Loader.prototype.failure = function(options) {
         var request = options.request;
         var requestUrl = options.requestUrl;
         console.error('error loading "' + requestUrl + '" (' + request.status + ' ' + request.statusText + ')');
+        this.status.errors++;
+    }
+};
 
-        if (options.config.postLoadCallback) {
-            options.config.postLoadCallback();
-        }
+//options - {Object} Hash containing request, config and requestUrl keys
+Loader.prototype.postLoad = function(options) {
+    if (options.config.postLoadCallback) {
+        options.config.postLoadCallback();
     }
 };
 
@@ -165,9 +170,22 @@ Loader.prototype.GET = function(config) {
     xhr.onload = function(evt) {
         self.success({request: evt.target, config: config, requestUrl: config.url});
     };
-
+    xhr.onprogress = function(evt) {
+        if (this.readyState == 3) {
+            // Abort loading of Request response when length of responseText > limit, in order
+            // to avoid Browser crash. evt.total not set in our case (Overpass API).
+            if (evt.loaded > self.responseSizeLimit) {
+                console.error('abort response loading, size limit exceeded (' + self.responseSizeLimit + '), url = ' + config.url);
+                self.status.errors++;
+                this.abort();
+            }
+        }
+    };
     xhr.onerror = function(evt) {
         self.failure({request: evt.target, config: config, requestUrl: config.url});
+    };
+    xhr.onloadend = function(evt) {
+        self.postLoad({request: evt.target, config: config, requestUrl: config.url});
     };
 
     // text only, XML parsing done later for better control over memory issues

@@ -19,6 +19,7 @@ Status.prototype.update = function() {
     document.getElementById('status_sequence').innerHTML = this.sequence || unset; 
     document.getElementById('status_new_changes').innerHTML = this.nvl(this.newChanges, unset);
     document.getElementById('status_total_changes').innerHTML = this.nvl(this.totalChanges, unset);
+    document.getElementById('status_errors').innerHTML = this.errors || unset;
 };
 
 Status.prototype.reset = function() {
@@ -28,6 +29,7 @@ Status.prototype.reset = function() {
     this.count = 0;
     this.newChanges = null;
     this.totalChanges = null;
+    this.errors = 0;
     
     this.update();
 };

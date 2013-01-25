@@ -75,6 +75,7 @@ FastBackward.prototype.toggle = function(e) {
         //this.sequence = 83690; 
         //this.sequence = 83610;
         //this.sequence = 83554;
+        //this.sequence = 160697;
 
         if (this.sequence === -1) {
             this.start();
