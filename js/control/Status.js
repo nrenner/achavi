@@ -5,12 +5,15 @@ function Status() {
     this.reset();
 }
 
+Status.prototype.getTimestampAsMoment = function() {
+    return moment(this.timestamp.replace('\\:', ':'));
+};
+
 Status.prototype.update = function() {
     var unset = '-';
-    var m, sTimestamp = unset;
+    var sTimestamp = unset;
     if (this.timestamp) {
-        m = moment(this.timestamp.replace('\\:', ':'));
-        sTimestamp = m.format('HH:mm');
+        sTimestamp = this.getTimestampAsMoment().format('HH:mm');
     }
     
     document.getElementById('status_countdown').innerHTML = this.nvl(this.countdown, unset);

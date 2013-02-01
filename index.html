@@ -20,14 +20,31 @@
             <div id="bbox_button" class="button left_button">
                 bbox
             </div>
-            <div id="fast_backward_button" class="button inner_button">
-                &lt;&lt;
-            </div>
             <div id="live_button" class="button inner_button">
                 live
             </div>
             <div id="clear_button" class="button right_button">
                 clear
+            </div>
+        </div>
+        <div id="top_buttons_border" class="border inner_border">
+            <div id="fast_backward_button" class="button left_button">
+                &lt;&lt;
+            </div>
+            <div id="backward_button" class="button inner_button">
+                &lt;
+            </div>
+            <div class="control_input inner_button">
+                <input type="text" id="datetime">
+            </div>
+            <div id="load_button" class="button inner_button">
+                load
+            </div>
+            <div id="forward_button" class="button inner_button">
+                &gt;
+            </div>
+            <div id="fast_forward_button" class="button right_button">
+                &gt;&gt;
             </div>
         </div>
         <div id="status_bar_border" class="border inner_border">
@@ -169,7 +186,7 @@
     <script src="js/Loader.js"></script>
     <script src="js/OverpassAPI.js"></script>
     <script src="js/control/Live.js"></script>
-    <script src="js/control/FastBackward.js"></script>
+    <script src="js/control/Player.js"></script>
     <script src="js/control/Status.js"></script>
     <script src="js/XHRDebug.js"></script>
 

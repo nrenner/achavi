@@ -265,6 +265,7 @@ var oscviewer = (function() {
     return {
         setActions : setActions,
         getInfoHtml: getInfoHtml,
-        getOsmType: getOsmType
+        getOsmType: getOsmType,
+        formatIsoDateTime: formatIsoDateTime
     };
 })();

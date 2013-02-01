@@ -26,6 +26,18 @@ OverpassAPI.prototype.getSequenceUrl = function(sequence) {
     return url;
 };
 
+OverpassAPI.prototype.parseSequence = function (request, url) {
+    var sequence = -1;
+    var response = request.responseText;
+    if (response) {
+        sequence = parseInt(response);
+    } else {
+        console.error('empty response for "' + url + '" (' + request.status + ' '
+                + request.statusText + ')');
+    }
+    return sequence;
+};
+
 OverpassAPI.prototype.getCurrentSequence = function () {
     var sequence = -1;
     var url = "http://overpass-api.de/augmented_diffs/state.txt";
@@ -35,17 +47,33 @@ OverpassAPI.prototype.getCurrentSequence = function () {
         async: false, 
         // do not send X-Requested-With header (option added by olex.Request-patch)
         disableXRequestedWith: true,
-        success: function(request) {
-            var response = request.responseText;
-            if (response) {
-                sequence = parseInt(response);
-            } else {
-                console.error('empty response for "' + url + '" (' + request.status + ' '
-                        + request.statusText + ')');
-            }
-        }
+        success: _.bind(function(request) {
+            sequence = this.parseSequence(request, url);
+        }, this)
     });        
     return sequence;
+};
+
+OverpassAPI.prototype.getSequenceByTime = function (timestamp, callback) {
+    var osmBase = moment.utc(timestamp).format('YYYY-MM-DDTHH[\\]:mm[\\]:ss\\Z');
+    console.log('load time: ' + osmBase);
+
+ // FIXME: remove (before commit)
+    //var url = 'http://overpass-api.de/api/augmented_state_by_date?osm_base=' + osmBase;
+    //var url = "http://overpass-api.de/augmented_diffs/state.txt";
+    var url = 'http://localhost:8060/cgi-bin/proxy.cgi?url=' + 'http://overpass-api.de/api/augmented_state_by_date?osm_base=' + osmBase;
+    
+    console.log('requesting state ' + url);
+    OpenLayers.Request.GET({
+        url: url,
+        async: true, 
+// FIXME: remove
+disableXRequestedWith: true,
+        success: _.bind(function(request) {
+            var sequence = this.parseSequence(request, url);
+            callback(sequence);
+        }, this)
+    });        
 };
 
 OverpassAPI.prototype.getSequenceFromUrl = function (url) {

@@ -243,7 +243,7 @@
 
         var overpassAPI = new OverpassAPI(loader, map);
         new Live(overpassAPI, status); 
-        new FastBackward(overpassAPI, status);
+        new Player(overpassAPI, status);
         
         var bboxChangeHandler = function(bbox) {
             overpassAPI.bbox = bbox;
