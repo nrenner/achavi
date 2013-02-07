@@ -57,18 +57,12 @@ OverpassAPI.prototype.getCurrentSequence = function () {
 OverpassAPI.prototype.getSequenceByTime = function (timestamp, callback) {
     var osmBase = moment.utc(timestamp).format('YYYY-MM-DDTHH[\\]:mm[\\]:ss\\Z');
     console.log('load time: ' + osmBase);
-
- // FIXME: remove (before commit)
-    //var url = 'http://overpass-api.de/api/augmented_state_by_date?osm_base=' + osmBase;
-    //var url = "http://overpass-api.de/augmented_diffs/state.txt";
-    var url = 'http://localhost:8060/cgi-bin/proxy.cgi?url=' + 'http://overpass-api.de/api/augmented_state_by_date?osm_base=' + osmBase;
-    
+    var url = 'http://overpass-api.de/api/augmented_state_by_date?osm_base=' + osmBase;
     console.log('requesting state ' + url);
     OpenLayers.Request.GET({
         url: url,
         async: true, 
-// FIXME: remove
-disableXRequestedWith: true,
+        disableXRequestedWith: true,
         success: _.bind(function(request) {
             var sequence = this.parseSequence(request, url);
             callback(sequence);
