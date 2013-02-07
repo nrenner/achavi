@@ -37,10 +37,42 @@ function Player(overpassAPI, status) {
     }
 
     this.eleDatetime = document.getElementById('datetime');
-    this.eleDatetime.value = oscviewer.formatIsoDateTime(+new Date());
+    this.eleDatetime.onchange = _.bind(this.resetSequence, this);
+
+    this.lastVisit = null;
+    var lastVisitItem = localStorage.getItem(Status.STORAGE_KEY_LAST_VISIT);
+    var eleLastVisitButton = document.getElementById('last_visit_button');
+    if (lastVisitItem) {
+        this.lastVisit = parseInt(lastVisitItem);
+        this.setDateTimeToLastVisit();
+        eleLastVisitButton.onclick = _.bind(this.setDateTimeToLastVisit, this);
+        console.log('last visit: ' + moment(this.lastVisit).format("YYYY-MM-DD HH:mm:ss"));
+    } else {
+        this.setDateTimeToNow();
+        eleLastVisitButton.classList.remove('button');
+        eleLastVisitButton.classList.add('button_disabled');
+    }
+    document.getElementById('now_button').onclick = _.bind(this.setDateTimeToNow, this);
 
     document.getElementById('load_button').onclick = _.bind(this.loadTime, this);
 }
+
+Player.prototype.setDateTime = function(dateTime) {
+    this.eleDatetime.value = oscviewer.formatIsoDateTime(dateTime);
+    this.resetSequence();
+};
+
+Player.prototype.setDateTimeToLastVisit = function() {
+    this.setDateTime(this.lastVisit);
+};
+
+Player.prototype.setDateTimeToNow = function() {
+    this.setDateTime(Date.now());
+};
+
+Player.prototype.resetSequence = function() {
+    this.sequence = -1;
+};
 
 Player.prototype.start = function(mode, element) {
     this.element = element;
@@ -53,20 +85,28 @@ Player.prototype.start = function(mode, element) {
         // getting empty response for current diff, so for now use previous instead (- 1)
         //this.currentSequence--;
         console.log('current sequence = ' + this.currentSequence);
+        /*
         if (this.sequence === -1) {
             this.sequence = this.currentSequence;
         }
+        */
     } else {
         console.error('invalid current sequence: "' + this.currentSequence + '"');
     }
 
-    if (this.sequence !== -1) {
-        var limitSequence = this.mode.operation(this.sequence, this.mode.limit);
-        this.stopSequence = Math.min(limitSequence, this.currentSequence);
-
-        // skips this sequence, which is either loaded with live or loadTime 
-        this.loadNext();
+    if (this.sequence === -1) {
+        this.getSequenceByTime(_.bind(this.startWithSequence, this));
+    } else {
+        this.startWithSequence();
     }
+};
+
+Player.prototype.startWithSequence = function() {
+    var limitSequence = this.mode.operation(this.sequence, this.mode.limit);
+    this.stopSequence = Math.min(limitSequence, this.currentSequence);
+
+    // skips this sequence, which is either loaded with live or loadTime 
+    this.loadNext();
 };
 
 Player.prototype.load = function() {
@@ -93,7 +133,9 @@ Player.prototype.updateStatus = function() {
     this.status.countdown = null;
     this.status.update();
     
-    this.eleDatetime.value = this.status.getTimestampAsMoment().format('YYYY-MM-DD HH:mm');
+    if (this.status.timestamp) {
+        this.eleDatetime.value = moment(this.status.timestamp).format('YYYY-MM-DD HH:mm');
+    }
 };
 
 Player.prototype.postLoad = function() {
@@ -113,15 +155,20 @@ Player.prototype.stop = function() {
     this.element.classList.remove('button_active');
 };
 
-Player.prototype.loadTime = function(e) {
+Player.prototype.getSequenceByTime = function(callback) {
     var inputTime = moment(this.eleDatetime.value, 'YYYY-MM-DD HH:mm').seconds(59).valueOf();
     
     this.status.setCountdown('...');
     this.overpassAPI.getSequenceByTime(inputTime, _.bind(function(sequence) {
+        this.status.setCountdown(null);
         console.log('sequence = ' + sequence);
         this.sequence = sequence;
-        this.load();
+        callback();
     }, this));
+};
+
+Player.prototype.loadTime = function(e) {
+    this.getSequenceByTime(_.bind(this.load, this));
 };
 
 Player.prototype.toggle = function(mode, e) {

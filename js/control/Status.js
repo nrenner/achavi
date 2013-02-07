@@ -5,15 +5,20 @@ function Status() {
     this.reset();
 }
 
-Status.prototype.getTimestampAsMoment = function() {
-    return moment(this.timestamp.replace('\\:', ':'));
-};
+/** key for local storage, max timestamp of last visit */
+Status.STORAGE_KEY_LAST_VISIT = 'achavi.last_visit';
 
 Status.prototype.update = function() {
     var unset = '-';
     var sTimestamp = unset;
     if (this.timestamp) {
-        sTimestamp = this.getTimestampAsMoment().format('HH:mm');
+        sTimestamp = moment(this.timestamp).format('HH:mm');
+        
+        // remember last visit as max timestamp of loaded diffs
+        var lastVisit = localStorage.getItem(Status.STORAGE_KEY_LAST_VISIT);
+        if (lastVisit < this.timestamp) {
+            localStorage.setItem(Status.STORAGE_KEY_LAST_VISIT, this.timestamp);
+        }
     }
     
     document.getElementById('status_countdown').innerHTML = this.nvl(this.countdown, unset);
@@ -28,6 +33,7 @@ Status.prototype.update = function() {
 Status.prototype.reset = function() {
     this.countdown = null;
     this.sequence = null;
+    /** number in milliseconds */
     this.timestamp = null;
     this.count = 0;
     this.newChanges = null;

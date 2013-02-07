@@ -58,9 +58,14 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
                 var obj = format.readAugmenting(doc);
                 osmFeatures = obj.old;
                 oscFeatures = obj.change;
-                this.status.timestamp = obj.timestamp;
+                // YYYY-MM-DDTHH\:mm\:ssZ
+                this.status.timestamp = null;
+                if (obj.timestamp) {
+                    this.status.timestamp = moment(obj.timestamp, 'YYYY-MM-DDTHH[\\]:mm[\\]:ssZ').valueOf();
+                } 
                 console.log(obj.timestamp);
             } else {
+                console.warn('deprecated diff format returned');
                 if (format.isAugmented(doc)) {
                     osmFeatures = format.readAugmenting(doc);
                 }

@@ -94,12 +94,16 @@ position: relative;
     float: left;
 }
 
-.button,.text_content,.info {
+.button,.text_content,.info,.button_disabled {
 	padding: 5px;
     background-color: rgba(0, 0, 0, 0.7);
 }
 .button,.info {
     color: white;
+}
+.button_disabled {
+    color: #888;
+    cursor: default;
 }
 .text_content,.text_content a {
     color: #BBB;
@@ -132,7 +136,7 @@ position: relative;
 .button,#status_bar {
     padding: 3px 10px 3px 10px;
 }
-.button {
+.button, .button_disabled {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -155,6 +159,32 @@ position: relative;
     border-radius: 0px;
 }
 
+.datetime_buttons {
+    margin-right: 0px;
+}
+.datetime_buttons > div {
+    padding: 0px 3px 0px 10px;
+    border-radius: 0px;
+    font-size: 55%;
+    line-height: 1;
+    text-align: right;
+    /*
+    color: #888;
+    background-color: rgba(0, 0, 0, 0.7);
+    */
+}
+.datetime_buttons > div:first-child {
+    padding-top: 2px;
+}
+.datetime_buttons > div:last-child {
+    padding-bottom: 2px;
+}
+/*
+.datetime_buttons > div:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+*/
 .control_input {
     margin-right: 0px;
 }
@@ -162,7 +192,6 @@ position: relative;
     width: 7.5em;
     margin: 0px;
     border: 3px solid rgba(0, 0, 0, 0.7);
-    border-left-width: 10px;
     padding: 0px 5px 0px 5px;
     outline: none;
     color: black;
