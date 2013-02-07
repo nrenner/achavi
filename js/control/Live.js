@@ -24,9 +24,6 @@ Live.prototype.load = function() {
     this.status.setCountdown('...');
     var currentSequence = this.overpassAPI.getCurrentSequence();
     if (currentSequence && currentSequence >= 0) {
-        // getting empty response for current diff, so for now use previous instead (- 1)
-        currentSequence--;
-
         if (this.sequence === -1) {
             this.nextLoadTime = this.calcNextLoadTime();
             this.sequence = currentSequence;
