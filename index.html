@@ -73,7 +73,7 @@
 
     <div id="bottom_buttons">
         <div class="bottom_buttons_cell">
-            <div id="legend_border" class="border"> 
+            <div class="border"> 
                 <div id="legend">
                     <div id="legend_button" class="button">legend</div>
                     <div id="legend_content" class="hidden text_content">
@@ -96,7 +96,32 @@
             </div>
         </div>
         <div class="bottom_buttons_cell">
-            <div id="about_border" class="border inner_border">
+            <div class="border inner_border"> 
+                <div id="help">
+                    <div id="help_button" class="button">help</div>
+                    <div id="help_content" class="hidden text_content">
+                        <strong>Help</strong>
+                        <p>
+                        Usage:
+
+                        <ul>
+                            <li>you can also drag &amp; drop diffs onto map from <a href="http://overpass-api.de/augmented_diffs/">Overpass API</a></li>
+                            <li>zoom on changes with shift + drag zoom box</li>
+                        </ul>
+                        </p>
+                        <p>
+                        <div id="help_tooltips">
+                        </div>
+                        
+                        <div id="help_minimize" class="minimize">
+                            <div class="minimize_icon"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom_buttons_cell">
+            <div class="border inner_border">
                 <div id="about">
                     <div id="about_button" class="button">about</div>
                     <div id="about_content" class="hidden text_content">
@@ -107,17 +132,6 @@
                         <br>Tested on Firefox and Chrome; Internet Explorer is not supported. 
                         </p>
                         <p>
-                        Usage:
-                        <ol>
-                            <li>press "bbox", then click and drag to draw bounding box (optional but recommended)</li>
-                            <li>press "live" to load current diff and activate minutely refreshing</li>
-                            <li>press "clear" to remove all loaded changes</li>
-                        </ol>
-                        <ul>
-                            <li>you can also drag &amp; drop diffs onto map from <a href="http://overpass-api.de/augmented_diffs/">Overpass API</a></li>
-                            <li>zoom on changes with shift + drag zoom box</li>
-                        </ul>
-                        </p>
                         Credits and licenses
                         <ul>
                             <li>
@@ -140,7 +154,7 @@
                                 <a href="licenses/momentjs-LICENSE">MIT License</a>
                             </li> 
                         </ul>
-                       
+                        
                         Contact and authors:
                         <ul>
                             <li>Augmented Diffs: Roland Olbricht</li> 
@@ -193,6 +207,8 @@
     <script src="js/control/Player.js"></script>
     <script src="js/control/Status.js"></script>
     <script src="js/XHRDebug.js"></script>
+
+    <script src="js/tooltips.js"></script>
 
     <script src="js/map.js"></script>
   </body>

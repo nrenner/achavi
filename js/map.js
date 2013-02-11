@@ -191,10 +191,12 @@
             document.getElementById(prefix + 'content').classList.toggle('hidden');
             document.getElementById(prefix + 'button').classList.toggle('hidden');
         };
-        document.getElementById('about_minimize').onclick = toggle;
-        document.getElementById('about_button').onclick = toggle;
-        document.getElementById('legend_minimize').onclick = toggle;
-        document.getElementById('legend_button').onclick = toggle;
+        
+        var bottomButtons = ['legend', 'help', 'about'];
+        bottomButtons.forEach(function(id) {
+            document.getElementById(id + '_minimize').onclick = toggle;
+            document.getElementById(id + '_button').onclick = toggle;
+        });
     }
 
 	function addBBoxControl(map, bboxChangeCallback) {

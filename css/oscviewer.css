@@ -57,7 +57,7 @@ position: relative;
     vertical-align: bottom;
     display: table-cell;
 }
-#legend_border, #about_border {
+.bottom_buttons_cell > div {
     position: relative;
     vertical-align: bottom;
 }
@@ -67,6 +67,27 @@ position: relative;
 	bottom: 0px;
 	*/
 	max-width: 750px;
+}
+/* TODO text_content (bottom buttons) scrollable
+#help_content {
+    overflow:auto;
+}
+*/
+.help_section {
+    margin-top: 6px;
+    margin-bottom: 3px;
+}
+.help_row {
+    display: block;
+}
+.help_row > div {
+    display: table-cell;
+} 
+.label_col {
+    padding-left: 5px;
+    padding-right: 10px;
+    text-align: right;
+    width: 3em;
 }
 #fileinput_border {
     left: 38px;
