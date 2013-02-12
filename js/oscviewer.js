@@ -166,7 +166,7 @@ var oscviewer = (function() {
         infoHtml += printMeta('changeset', oldTags, changeTags, formatOsmLink);
 
         infoHtml += '<tr><td class="tagsep" colspan="3"><hr/></td></tr>';
-        infoHtml += printKeys(keys, oldTags, changeTags);
+        infoHtml += printKeys(keys, oldTags, changeTags, action);
 
         infoHtml += '</table>';
         infoHtml += '</div>';
@@ -208,7 +208,7 @@ var oscviewer = (function() {
         return infoHtml;
     }
 
-    function printKeys(keys, oldTags, changeTags) {
+    function printKeys(keys, oldTags, changeTags, action) {
         var i;
         var oldVal, changeVal;
         var classes;
@@ -217,7 +217,7 @@ var oscviewer = (function() {
             key = keys[i];
             oldVal = oldTags && oldTags[key];
             changeVal = changeTags && changeTags[key];
-            classes = (oldTags && changeTags) ? getClasses(oldVal, changeVal) : getDefaultClasses();
+            classes = (oldTags && changeTags) ? getClasses(oldVal, changeVal, action) : getDefaultClasses();
             infoHtml += '<tr><td class="tagkey ' + classes.key + '">' + key + '</td>';
             if (oldTags) {
                 infoHtml += '<td class="' + classes.old + '">' + val(oldVal) + '</td>';
@@ -239,7 +239,7 @@ var oscviewer = (function() {
         return c;
     }
 
-    function getClasses(oldVal, changeVal) {
+    function getClasses(oldVal, changeVal, action) {
         var c = getDefaultClasses();
 
         if (_.isUndefined(oldVal)) {
@@ -247,8 +247,11 @@ var oscviewer = (function() {
             c.old = 'undefined';
             c.change = 'created';
         } else if (_.isUndefined(changeVal)) {
-            c.key = 'deleted';
-            c.old = 'deleted';
+            // default on delete, because tags themselves are unchanged
+            if (action !== 'delete') {
+                c.key = 'deleted';
+                c.old = 'deleted';
+            }
             c.change = 'undefined';
         } else if (oldVal !== changeVal) {
             c.old = 'modified';
