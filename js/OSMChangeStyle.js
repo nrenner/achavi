@@ -117,6 +117,13 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
         },
         minScaleDenominator: getScaleFromZoom(15)
     }));
+    rules.push(rule("osmType = 'way'", {
+        symbolizer: {
+            strokeWidth: 1.5,
+            fillOpacity : 0.1
+        },
+        minScaleDenominator: getScaleFromZoom(10)
+    }));
 
     var wayNodeSymbolizer = { 
         graphicName: "square",
@@ -179,22 +186,35 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
         },
         minScaleDenominator: getScaleFromZoom(12)
     }));
+    rules.push(rule("osmType = 'node' AND hasTags = 'true'", {
+        symbolizer: {
+            pointRadius: 1
+        },
+        minScaleDenominator: getScaleFromZoom(8)
+    }));
     
     // select rules
-    var ruleWaySelect = rule("osmType = 'way'", {
+    var rulesSelect = [];
+    rulesSelect.push(rule("osmType = 'way'", {
         symbolizer: {
             strokeWidth: 3,
             strokeColor: 'white'
         }
-    });
+    }));
+    rulesSelect.push(rule("osmType = 'way'", {
+        symbolizer: {
+            strokeWidth: 2,
+        },
+        minScaleDenominator: getScaleFromZoom(15)
+    }));
 
-    var ruleNodeSelect = rule("osmType = 'node'", {
+    rulesSelect.push(rule("osmType = 'node'", {
         symbolizer: {
             strokeWidth: 1.5,
             strokeColor: 'white'
         }
-    });
-    
+    }));
+
     // unique value rules (action)
 
     // changes
@@ -241,7 +261,6 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
     styleMaps.old.addUniqueValueRules("default", "action", osmActionRules);
 
     // after UniqueValueRules because of strokeColor nodes
-    var rulesSelect = [ruleWaySelect, ruleNodeSelect];
     styleMaps.changes.styles['default'].addRules(rules);
     styleMaps.old.styles['default'].addRules(rules); 
     styleMaps.old.styles['default'].addRules([oldModifyLowZoom]); 
