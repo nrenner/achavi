@@ -3,7 +3,7 @@ var tooltips = (function() {
     // tag id > tooltip text (title attribute)
 
     var main = {
-        bbox_button: "click and drag to draw bounding box (optional, else current map view is used)",
+        bbox_button: "click and drag to draw bounding box (optional, else current map view is used), to display and edit activate 'bbox' layer",
         live_button: "load latest diff and activate minutely refreshing",
         clear_button: "remove all loaded changes"
     };

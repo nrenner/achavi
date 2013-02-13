@@ -200,61 +200,54 @@
     }
 
 	function addBBoxControl(map, bboxChangeCallback) {
+
+	    var col = 'rgba(255, 255, 255, 0.4)';
+	    bbox.style['default'].strokeColor = col;
+	    bbox.style['transform'].strokeColor = col;
+	    bbox.style['temporary'].strokeColor = col;
+	    
 		// bbox vector layer for drawing
-        var bboxLayer = new OpenLayers.Layer.Vector("box", {
-            styleMap : bbox.createStyleMap(),
+        var bboxLayer = new OpenLayers.Layer.Vector("bbox", {
+            styleMap: bbox.createStyleMap(),
 			// for now, hide layer by default, because bbox select control disables/interferes with main select control
 			visibility: false
         });
         map.addLayer(bboxLayer);
 
 		// bbox control
-		var updateInfo = function(feature) {
-			var bounds = feature.geometry.getBounds().clone();
-            bounds = bounds.transform(map.getProjectionObject(), displayProjection);
-			
-	        var decimals = Math.floor(map.getZoom() / 3);
-			var multiplier = Math.pow(10, decimals);
-
-			// custom float.toFixed function that rounds to integer when .0
-			// see OpenLayers.Bounds.toBBOX
-			var toFixed = function(num) {
-				return Math.round(num * multiplier) / multiplier;
-			};
-			
-			var box = {
-                left : toFixed(bounds.left),
-                bottom : toFixed(bounds.bottom),
-                right : toFixed(bounds.right),
-                top : toFixed(bounds.top)
-            };
-			
-			bboxChangeCallback(box);
-		};
         bbox.addControls(map, bboxLayer, {
-            update : updateInfo,
-            activate : function() {},
-            deactivate : function() {}
+            update : bboxChangeCallback,
+            activate : function() {
+                // reset when new box is drawn (set bbox to null)
+                bboxChangeCallback(null);
+                document.getElementById('bbox_button').classList.add('button_active');
+            },
+            deactivate : function() {
+                document.getElementById('bbox_button').classList.remove('button_active');
+            }
         });
-        
+
+        var onBBoxClick = function(e) {
+            bbox.switchActive();
+        };
+        document.getElementById('bbox_button').onclick = onBBoxClick;
+
         return bbox;
 	}
 
     function addControls(map, layers, loader) {
+        var overpassAPI;
+
         addBottomControls();
 
-        var overpassAPI = new OverpassAPI(loader, map);
-        new Live(overpassAPI, status); 
-        new Player(overpassAPI, status);
-        
         var bboxChangeHandler = function(bbox) {
             overpassAPI.bbox = bbox;
         };
         var bboxControl = addBBoxControl(map, bboxChangeHandler);
-        var onBBoxClick = function(e) {
-            bboxControl.switchActive();
-        };
-        document.getElementById('bbox_button').onclick = onBBoxClick;
+
+        overpassAPI = new OverpassAPI(loader, bboxControl);
+        new Live(overpassAPI, status); 
+        new Player(overpassAPI, status);
         
         var onClearClick = function(e) {
             for (var i = 0; i < layers.length; i++) {

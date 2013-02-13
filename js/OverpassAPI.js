@@ -1,9 +1,9 @@
 /**
  * class OverpassAPI
  */
-function OverpassAPI(loader, map) {
+function OverpassAPI(loader, bboxControl) {
     this.loader = loader;
-    this.map = map;
+    this.bboxControl = bboxControl;
     this.bbox = null;
     
     // http://www.overpass-api.de/augmented_diffs/000/008/066.osc.gz
@@ -85,7 +85,7 @@ OverpassAPI.prototype.load = function(sequence, postLoadCallback) {
         var url = "http://overpass-api.de/api/augmented_diff?id=" + sequence + "&info=no";
         //var url = getSequenceUrl(sequence);
         if (!this.bbox) {
-            this.bbox = map.getExtent().transform(map.getProjectionObject(), "EPSG:4326");
+            this.bbox = this.bboxControl.addBBoxFromViewPort();
         }
         bboxParam = OpenLayers.String.format('&bbox=${left},${bottom},${right},${top}', this.bbox);
         //console.log("box = " + bboxParam);
