@@ -9,15 +9,16 @@ function Live(overpassAPI, status) {
     this.sequence = -1; 
     this.nextLoadTime = null;
     
-    this.retryDelay = 15000; // 15 sec.
+    this.retryDelay = 30000; // 30 sec.
+    this.catchUpDelay = 2000; // 2 sec.
 
     this.element = document.getElementById('live_button');
     this.element.onclick = _.bind(this.toggle, this);
 }
 
 Live.prototype.calcNextLoadTime = function() {
-    // diff created every full minute, wait x sec for completion 
-    return moment().add('minutes', 1).seconds(10);
+    var m = moment(this.nextLoadTime).add('minutes', 1);
+    return m.valueOf();
 };
 
 Live.prototype.load = function() {
@@ -32,7 +33,7 @@ Live.prototype.load = function() {
             if (currentSequence > this.sequence){
                 if (currentSequence - this.sequence > 1) {
                     // shorter delay to catch up if more than one diff behind
-                    this.nextLoadTime = +new Date() + this.retryDelay;
+                    this.nextLoadTime += Date.now() + this.catchUpDelay;
                 } else {
                     this.nextLoadTime = this.calcNextLoadTime();
                 }
@@ -40,8 +41,8 @@ Live.prototype.load = function() {
                 this.overpassAPI.load(this.sequence, _.bind(this.postLoad, this));
             } else {
                 this.status.setCountdown('x');
-                this.nextLoadTime = +new Date() + this.retryDelay;
-                console.log('skip refresh: sequence = ' + this.sequence + ', current sequence = ' + currentSequence);
+                this.nextLoadTime += this.retryDelay;
+                console.log('skip refresh: sequence = ' + this.sequence + ', next retry: ' + moment(this.nextLoadTime).format("HH:mm:ss"));
             }
         }
     }
@@ -54,7 +55,7 @@ Live.prototype.postLoad = function() {
 };
 
 Live.prototype.tick = function() {
-    if (this.nextLoadTime <= +new Date()) {
+    if (this.nextLoadTime <= Date.now()) {
         this.load();
     } else {
         this.status.setCountdown(moment(this.nextLoadTime).diff(moment(), 'seconds') + 1);
@@ -64,6 +65,7 @@ Live.prototype.tick = function() {
 Live.prototype.toggle = function(e) {
     this.element.classList.toggle('button_active');
     if (!this.interval) {
+        this.nextLoadTime = Date.now();
         this.load();
         this.interval = window.setInterval(_.bind(this.tick, this), 1000);
     } else {
