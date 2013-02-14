@@ -57,6 +57,14 @@ function Player(overpassAPI, status) {
     document.getElementById('load_button').onclick = _.bind(this.loadTime, this);
 }
 
+/** 
+ * First available sequence number for *id_sorted* diffs.
+ * see http://overpass-api.de/augmented_diffs/id_sorted/
+ * api/augmented_state_by_date returns 6749 for "old" format, id_sorted format
+ * starts with 8385, but api returns empty result for the first ones.
+ */
+Player.LOWER_LIMIT = 13000;
+
 Player.prototype.setDateTime = function(dateTime) {
     this.eleDatetime.value = oscviewer.formatIsoDateTime(dateTime);
     this.resetSequence();
@@ -80,20 +88,6 @@ Player.prototype.start = function(mode, element) {
     this.mode = mode;
     this.active = true;
     
-    this.currentSequence = this.overpassAPI.getCurrentSequence();
-    if (this.currentSequence && this.currentSequence >= 0) {
-        // getting empty response for current diff, so for now use previous instead (- 1)
-        //this.currentSequence--;
-        console.log('current sequence = ' + this.currentSequence);
-        /*
-        if (this.sequence === -1) {
-            this.sequence = this.currentSequence;
-        }
-        */
-    } else {
-        console.error('invalid current sequence: "' + this.currentSequence + '"');
-    }
-
     if (this.sequence === -1) {
         this.getSequenceByTime(_.bind(this.startWithSequence, this));
     } else {
@@ -101,9 +95,23 @@ Player.prototype.start = function(mode, element) {
     }
 };
 
+Player.prototype.loadCurrentSequence = function() {
+    this.currentSequence = this.overpassAPI.getCurrentSequence();
+    if (this.currentSequence && this.currentSequence >= 0) {
+        console.log('current sequence = ' + this.currentSequence);
+    } else {
+        console.error('invalid current sequence: "' + this.currentSequence + '"');
+        this.currentSequence = null;
+    }
+};
+
 Player.prototype.startWithSequence = function() {
     var limitSequence = this.mode.operation(this.sequence, this.mode.limit);
+    if (!this.currentSequence || limitSequence >= this.currentSequence) {
+        this.loadCurrentSequence();
+    }
     this.stopSequence = Math.min(limitSequence, this.currentSequence);
+    this.stopSequence = Math.max(this.stopSequence, Player.LOWER_LIMIT);
 
     // skips this sequence, which is either loaded with live or loadTime 
     this.loadNext();
@@ -162,7 +170,7 @@ Player.prototype.getSequenceByTime = function(callback) {
     this.overpassAPI.getSequenceByTime(inputTime, _.bind(function(sequence) {
         this.status.setCountdown(null);
         console.log('sequence = ' + sequence);
-        this.sequence = sequence;
+        this.sequence = Math.max(sequence, Player.LOWER_LIMIT);
         callback();
     }, this));
 };
