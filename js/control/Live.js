@@ -33,7 +33,7 @@ Live.prototype.load = function() {
             if (currentSequence > this.sequence){
                 if (currentSequence - this.sequence > 1) {
                     // shorter delay to catch up if more than one diff behind
-                    this.nextLoadTime += Date.now() + this.catchUpDelay;
+                    this.nextLoadTime = Date.now() + this.catchUpDelay;
                 } else {
                     this.nextLoadTime = this.calcNextLoadTime();
                 }
