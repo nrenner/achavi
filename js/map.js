@@ -19,12 +19,14 @@
         // OSM zoom levels: 0-18
         var serverResolutions = resolutions.slice(0, 19);
 
-        map.addLayer(new OpenLayers.Layer.OSM(null, null, {
+        var osm = new OpenLayers.Layer.OSM(null, null, {
             wrapDateLine: false,
             opacity : 0.2,
             resolutions : resolutions,
             serverResolutions : serverResolutions
-        }));
+        });
+        osm.attribution = 'tiles ' + osm.attribution;  
+        map.addLayer(osm);
 
         // empty layer (~ no base layer)
         map.addLayer(new OpenLayers.Layer("blank", {
@@ -48,7 +50,9 @@
 
         map = new OpenLayers.Map(options);
 
-        map.addControl(new OpenLayers.Control.Attribution());
+        var cAttribution = new OpenLayers.Control.Attribution();
+        cAttribution.template = "achavi&nbsp&nbsp-&nbsp&nbsp${layers}";
+        map.addControl(cAttribution);
         // map.addControl(new OpenLayers.Control.LayerSwitcher());
         map.addControl(new OpenLayers.Control.LayerSwitcherBorder());
         map.addControl(new OpenLayers.Control.Navigation());
@@ -85,7 +89,9 @@
             visibility : true,
             styleMap : styleMaps.changes,
             renderers : renderers,
-            rendererOptions: { zIndexing: true }
+            rendererOptions: { zIndexing: true },
+            attribution: 'data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
+                + 'licensed under <a href="http://opendatacommons.org/licenses/odbl/">ODbL</a>'
         });
 
         status = new Status();

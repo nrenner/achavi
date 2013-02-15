@@ -366,6 +366,16 @@ div.olControlZoom a:hover,.maximizeDiv.olButton:hover,.button:hover,.button_acti
     font-size: 70% !important;
     text-align: right;
 }
+.olControlAttribution {
+    bottom: 0.5em !important;
+}
+div.olControlMousePosition {
+    font-size: 70% !important;
+    bottom: 2em !important;
+}
+.olControlPermalink {
+    bottom: 3.5em !important;
+}
 .olControlLayerSwitcher {
     top: 0px;
     right: 0px;
