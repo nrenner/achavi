@@ -8,6 +8,26 @@ function PopupHandler(map, old, changes) {
         hover.unselect(selectedFeature);
     };
 
+    this.getOldFeature = function(changeFeature) {
+        var oldFeature;
+        if (changeFeature.hasOwnProperty('oldFeature')) {
+            oldFeature = changeFeature.oldFeature;
+        } else {
+            oldFeature = old.getFeatureByFid(changeFeature.fid);
+        }
+        return oldFeature;
+    };
+
+    this.getChangeFeature = function(oldFeature) {
+        var changeFeature;
+        if (oldFeature.hasOwnProperty('changeFeature')) {
+            changeFeature = oldFeature.changeFeature;
+        } else {
+            changeFeature = changes.getFeatureByFid(oldFeature.fid);
+        }
+        return changeFeature;
+    };
+
     this.onFeatureSelect = function(feature, mouseXy, hover) {
         var oldFeature, changeFeature;
         var infoHtml;
@@ -16,10 +36,10 @@ function PopupHandler(map, old, changes) {
 
         if (feature.layer === changes) {
             changeFeature = feature;
-            oldFeature = old.getFeatureByFid(feature.fid);
+            oldFeature = this.getOldFeature(changeFeature);
         } else {
             oldFeature = feature;
-            changeFeature = changes.getFeatureByFid(feature.fid);
+            changeFeature = this.getChangeFeature(oldFeature);
         }
 
         infoHtml = oscviewer.getInfoHtml(oldFeature, changeFeature);
