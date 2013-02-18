@@ -60,3 +60,12 @@ Status.prototype.setCountdown = function(countdown) {
     this.countdown = countdown;
     this.update();
 };
+
+Status.prototype.loadStart = function() {
+    this.setCountdown('&nbsp;');
+    document.getElementById('status_countdown').classList.add('spinner');
+};
+
+Status.prototype.loadEnd = function() {
+    document.getElementById('status_countdown').classList.remove('spinner');
+};

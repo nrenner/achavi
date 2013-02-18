@@ -23,3 +23,5 @@ script URL in index.html.
 * [OpenLayers](http://www.openlayers.org/): Copyright (c) 2005-2012 OpenLayers [Contributors](licenses/openlayers-authors.txt), [2-clause BSD License](licenses/openlayers-license.txt)
 * [Underscore.js](http://underscorejs.org/): Copyright (c) 2009-2012 Jeremy Ashkenas, DocumentCloud, [MIT License](licenses/underscorejs-LICENSE)
 * [Moment.js](http://momentjs.com/): Copyright (c) 2011-2012 Tim Wood, [MIT License](licenses/momentjs-LICENSE)
+
+* loadinggif-4.gif by http://loadinggif.com/

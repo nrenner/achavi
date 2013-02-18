@@ -118,7 +118,7 @@ Player.prototype.startWithSequence = function() {
 };
 
 Player.prototype.load = function() {
-    this.status.setCountdown('...');
+    this.status.loadStart();
     this.overpassAPI.load(this.sequence, _.bind(this.postLoad, this));
 };
 
@@ -147,6 +147,7 @@ Player.prototype.updateStatus = function() {
 };
 
 Player.prototype.postLoad = function() {
+    this.status.loadEnd();
     this.updateStatus();
 
     if (this.active) {
@@ -166,9 +167,9 @@ Player.prototype.stop = function() {
 Player.prototype.getSequenceByTime = function(callback) {
     var inputTime = moment(this.eleDatetime.value, 'YYYY-MM-DD HH:mm').seconds(59).valueOf();
     
-    this.status.setCountdown('...');
+    this.status.loadStart();
     this.overpassAPI.getSequenceByTime(inputTime, _.bind(function(sequence) {
-        this.status.setCountdown(null);
+        this.status.loadEnd();
         console.log('sequence = ' + sequence);
         this.sequence = Math.max(sequence, Player.LOWER_LIMIT);
         callback();

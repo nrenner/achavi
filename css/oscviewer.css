@@ -145,6 +145,11 @@ position: relative;
     width: 1em;
     text-align: center;
 }
+.spinner {
+    background-image: url(../img/loadinggif-4.gif);
+    background-repeat: no-repeat;
+    background-position: center center;
+}
 #legend_content,.info,#info,#about_content,#fileinput_div,.olControlLayerSwitcher .layersDiv,.olControlLayerSwitcher .maximizeDiv,.olControlLayerSwitcher .minimizeDiv,.button,.text_content {
     border-radius: 4px;
 }

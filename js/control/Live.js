@@ -22,7 +22,7 @@ Live.prototype.calcNextLoadTime = function() {
 };
 
 Live.prototype.load = function() {
-    this.status.setCountdown('...');
+    this.status.loadStart();
     var currentSequence = this.overpassAPI.getCurrentSequence();
     if (currentSequence && currentSequence >= 0) {
         if (this.sequence === -1) {
@@ -40,6 +40,7 @@ Live.prototype.load = function() {
                 this.sequence++;
                 this.overpassAPI.load(this.sequence, _.bind(this.postLoad, this));
             } else {
+                this.status.loadEnd();
                 this.status.setCountdown('x');
                 this.nextLoadTime += this.retryDelay;
                 console.log('skip refresh: sequence = ' + this.sequence + ', next retry: ' + moment(this.nextLoadTime).format("HH:mm:ss"));
@@ -49,6 +50,7 @@ Live.prototype.load = function() {
 };
 
 Live.prototype.postLoad = function() {
+    this.status.loadEnd();
     this.status.sequence = this.sequence;
     this.status.count++;
     this.status.update();
