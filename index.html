@@ -108,13 +108,19 @@
                 <div id="help">
                     <div id="help_button" class="button">help</div>
                     <div id="help_content" class="hidden text_content">
-                        <strong>Help</strong>
-                        <p>
-                        Usage:
-
+                        <strong>Usage</strong>
                         <ul>
-                            <li>you can also drag &amp; drop diffs onto map from <a href="http://overpass-api.de/augmented_diffs/">Overpass API</a></li>
+                            <li>zoom in to your area of interest</li>
+                            <li>press 'live' to follow current changes, see 'Main buttons'</li>
+                            <li><em>[experimental]:</em> to replay changes since your last visit, fast forward with '&gt;&gt;' (start time defaults to last visit)<br> 
+                            or set time to 'now' and fast backward with '&lt;&lt;'. Fast forward/backward stops after a limit of 24h. See 'Player'</li>
+                            <li>to load changes at a specific point in time, enter date & time, press 'load' and go forward or backward from there.<br> 
+                            Augmented Diffs go back until October 2012.</li>
+                        </ul>
+                        <ul>
+                            <li>hover over feature to show popup, click on feature to keep popup open, click on map to close</li>
                             <li>zoom on changes with shift + drag zoom box</li>
+                            <li>changes displayed outside the bounding box affect crossing relations</li>
                         </ul>
                         </p>
                         <p>
@@ -137,8 +143,10 @@
                         <p>
                         Displays updates to OpenStreetMap based on minutely 
                         <a href="http://wiki.openstreetmap.org/wiki/Overpass_API/Augmented_Diffs">Augmented Diffs</a> provided by Overpass API.
-                        <br>Tested on Firefox and Chrome; Internet Explorer is not supported. 
-                        </p>
+                        <br>Tested on Firefox and Chrome; Internet Explorer and mobile not supported. 
+                        <p>
+                        This is an early alpha version and many features are missing, like relation support, changeset<br> 
+                        information, navigation support and performance optimization. Also expect to find bugs.  
                         <p>
                         Credits and licenses
                         <ul>

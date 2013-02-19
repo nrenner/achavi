@@ -76,6 +76,7 @@ position: relative;
 .help_section {
     margin-top: 6px;
     margin-bottom: 3px;
+    font-weight: bold;
 }
 .help_row {
     display: block;
