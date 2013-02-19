@@ -2,9 +2,6 @@
 
 	var displayProjection = "EPSG:4326";
 
-    var oldUrl = null;
-    var changesUrl = null;
-
     var hover;
     var renderers = [ "SVG" ]; // Canvas
     
@@ -96,56 +93,13 @@
 
         status = new Status();
         var loader = new Loader(map, { changes: changes, old: old }, status);
-        
-        // OSM file (old)
-        var osmXml = null;
-        if (oldUrl) {
-            var request = OpenLayers.Request.GET({
-                url : oldUrl,
-                async : false
-            });
-            osmXml = request.responseXML || request.responseText;
-        }
 
-        // OSC file (changes/new)
-        var oscResponse = null;
+        // load augmented change file passed as 'url' parameter
 		var parameters = OpenLayers.Control.ArgParser.prototype.getParameters();
 		if (parameters.url)  {
-			changesUrl = parameters.url;
+            loader.GET({url: parameters.url, zoomToExtent: !map.getCenter()});
 		}
-        if (changesUrl) {
-            loader.GET({url: changesUrl, zoomToExtent: !map.getCenter()});
-        }
 
-        var formatOptions = {
-            internalProjection : map.getProjectionObject()
-        };
-        var osmFormat = new OpenLayers.Format.OSMExt(formatOptions);
-        var oscFormat = new OpenLayers.Format.OSC(formatOptions);
-        var augmentedOscFormat = new OpenLayers.Format.OSCAugmented(formatOptions);
-
-        var oscFeatures;
-        if (oscResponse) {
-            // TODO move to handleLoad
-            if (osmXml) {
-                var features = osmFormat.read(osmXml);
-                old.addFeatures(features);
-
-                oscFeatures = augmentedOscFormat.read(oscResponse, osmXml);
-            } else if (augmentedOscFormat.isAugmented(oscResponse)) {
-                var augmentingFeatures = augmentedOscFormat.readAugmenting(oscResponse);
-                old.addFeatures(augmentingFeatures);
-
-                oscFeatures = augmentedOscFormat.read(oscResponse);
-            } else {
-                oscFeatures = oscFormat.read(oscResponse);
-            }
-            changes.addFeatures(oscFeatures);
-
-            oscviewer.setActions(changes, old);
-        }
-
-		
         map.addLayer(old);
         map.addLayer(changes);
 
