@@ -25,3 +25,4 @@ script URL in index.html.
 * [Moment.js](http://momentjs.com/): Copyright (c) 2011-2012 Tim Wood, [MIT License](licenses/momentjs-LICENSE)
 
 * loadinggif-4.gif by http://loadinggif.com/
+* [layer-switcher-minimize.png](https://github.com/nrenner/openlayers_themes): Copyright (c) 2010, Development Seed, Inc., [3-clause BSD License](licenses/openlayers_themes-LICENSE.txt)
