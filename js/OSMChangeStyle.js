@@ -102,7 +102,18 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
 
     // rules
     var rules = [];
-    
+
+    rules.push(rule("osmType = 'relation'", {
+        symbolizer: {
+            strokeWidth: 6,
+            strokeOpacity : 0.5,
+            fillOpacity : 0.2,
+            strokeDashstyle: 'dash',
+            /* disable relations for now, map too cluttered */
+            display: 'none'
+        }
+    }));
+
     rules.push(rule("osmType = 'way'", {
         symbolizer: {
             strokeWidth: 2,
@@ -195,6 +206,16 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
     
     // select rules
     var rulesSelect = [];
+
+    rulesSelect.push(rule("osmType = 'relation'", {
+        symbolizer: {
+            strokeOpacity : 1.0,
+            strokeColor: 'white',
+            /* disable relations for now, map too cluttered */
+            display: 'none'
+        }
+    }));
+
     rulesSelect.push(rule("osmType = 'way'", {
         symbolizer: {
             strokeWidth: 3,

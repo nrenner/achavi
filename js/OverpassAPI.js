@@ -103,3 +103,34 @@ OverpassAPI.prototype.load = function(sequence, postLoadCallback) {
         console.log('invalid sequence: "' + sequence + '"');
     }
 };
+
+OverpassAPI.prototype.loadDiff = function(from, to, postLoadCallback) {
+    var mindate = moment.utc(from).format('YYYY-MM-DDTHH:mm:ss\\Z'),
+        maxdate = to ? moment.utc(to).format('YYYY-MM-DDTHH:mm:ss\\Z') : '',
+        bboxParam,
+        url;
+
+    if (maxdate) {
+        maxdate = ',"' + maxdate + '"';
+    }
+
+    var data_url = 'http://overpass-api.de/api/interpreter_0750';
+    url = data_url + '?data=[adiff:"' + mindate + '"' + maxdate
+        + '];(node(bbox);way(bbox);relation(bbox););out meta geom(bbox);'
+
+    if (!this.bbox) {
+      this.bbox = this.bboxControl.addBBoxFromViewPort();
+    }
+    bboxParam = OpenLayers.String.format('&bbox=${left},${bottom},${right},${top}', this.bbox);
+    url += bboxParam;
+
+    this.loader.GET({
+        url: url,
+        // do not zoom to data extent after load; option forwarded to load handler
+        // (option only forwarded when using success event instead of callback)
+        zoomToExtent: false,
+        // do not send X-Requested-With header (option added by olex.Request-patch)
+        disableXRequestedWith: true,
+        postLoadCallback: postLoadCallback
+    });
+};

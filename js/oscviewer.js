@@ -105,6 +105,10 @@ var oscviewer = (function() {
         }
     }
 
+    // TODO move to OSMDiffFormat
+    OpenLayers.Format.OSC.prototype.metaAttributes.push('action');
+    OpenLayers.Format.OSC.prototype.metaAttributes.push('state');
+
     function isMetaAttribute(attr) {
         var metaAttrs = OpenLayers.Format.OSC.prototype.metaAttributes;
         return OpenLayers.Util.indexOf(metaAttrs, attr) !== -1;

@@ -11,6 +11,7 @@ function FormatRegistry(formatOptions) {
     this.formats.osmAugmentedDiff = OpenLayers.Format.OSCAugmentedDiff;
 	this.formats.osmAugmentedDiff_IDSorted = OpenLayers.Format.OSCAugmentedDiffIDSorted;
     this.formats.osmChangeset = OpenLayers.Format.OSMChangeset;
+    this.formats.osmDiff = OSMDiffFormat; // overpass.js, new augmented diff format
 }
 
 FormatRegistry.prototype.getFormat = function(doc) {
@@ -34,14 +35,19 @@ FormatRegistry.prototype.getFormatType = function(doc) {
     
     // special cases with common root node name but different content 
     if (type === 'osm') {
-        var node = doc.documentElement.firstChild;
-        while (node) {
-            // changeset info file
-            if (node.nodeName === 'changeset') {
-                type = 'osmChangeset';
-                break;
+        var generatorAttribute = doc.documentElement.getAttribute('generator');
+        if (generatorAttribute && generatorAttribute === 'Overpass API') {
+            type = 'osmDiff';
+        } else {
+            var node = doc.documentElement.firstChild;
+            while (node) {
+                // changeset info file
+                if (node.nodeName === 'changeset') {
+                    type = 'osmChangeset';
+                    break;
+                }
+                node = node.nextSibling;
             }
-            node = node.nextSibling;
         }
     } else if (type === 'osmAugmentedDiff') {
 		var formatAttribute = doc.documentElement.getAttribute('format');

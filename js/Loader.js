@@ -41,6 +41,10 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
     var format = desc.format;
     var oscFeatures = [];
     var osmFeatures = [];
+    var features = [];
+    var feature;
+    var state;
+    var i = 0;
     console.timeEnd("xml");
     if (format) {
         if (desc.type === 'osmChangeset') {
@@ -64,6 +68,24 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
                     this.status.timestamp = moment(obj.timestamp, 'YYYY-MM-DDTHH[\\]:mm[\\]:ssZ').valueOf();
                 } 
                 console.log(obj.timestamp);
+            } else if (desc.type === 'osmDiff') {
+                format.extent = null;
+                features = format.read(doc);
+                for (i = 0; i < features.length; i++) {
+                    feature = features[i];
+                    state = feature.attributes.state;
+
+                    // adjust new format to old, for now
+                    feature.attributes = feature.tags;
+                    feature.attributes.state = state;
+                    feature.attributes.action = feature.action;
+                    if (state === 'old') {
+                        osmFeatures.push(feature);
+                    } else {
+                        oscFeatures.push(feature);
+                    }
+                }
+                console.log('osmDiff old: ' + osmFeatures.length + ', new: ' + oscFeatures.length);
             } else {
                 console.warn('deprecated diff format returned');
                 if (format.isAugmented(doc)) {

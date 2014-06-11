@@ -27,7 +27,20 @@
                 clear
             </div>
         </div>
+        <!-- Diff -->
         <div id="top_buttons_border" class="border inner_border">
+            <div class="control_input inner_button">
+                <input type="text" id="fromDatetime">
+            </div>
+            <div class="control_input inner_button">
+                <input type="text" id="toDatetime">
+            </div>
+            <div id="load_button" class="button right_button">
+                load
+            </div>
+        </div>
+        <!-- Player (disabled) -->
+        <div id="top_buttons_border" class="border inner_border hidden">
             <div id="fast_backward_button" class="button left_button">
                 &lt;&lt;
             </div>
@@ -198,7 +211,7 @@
     <script src="lib/moment.min.js"></script>
 
     <script src="lib/olex.js"></script>
-    <!-- 
+    <!--
     <script src="../olex/js/OSMMeta.js"></script>
     <script src="../olex/js/OSMExt.js"></script>
     <script src="../olex/js/OSC.js"></script>
@@ -213,6 +226,8 @@
     <script src="../olex/js/bbox.js"></script>
     -->
 
+    <script src="lib/overpass.js"></script>
+
     <script src="js/FormatRegistry.js"></script>
     <script src="js/OSMChangeStyle.js"></script>
     <script src="js/oscviewer.js"></script>
@@ -221,6 +236,7 @@
     <script src="js/OverpassAPI.js"></script>
     <script src="js/control/Live.js"></script>
     <script src="js/control/Player.js"></script>
+    <script src="js/control/Diff.js"></script>
     <script src="js/control/Status.js"></script>
     <script src="js/XHRDebug.js"></script>
 
