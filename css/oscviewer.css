@@ -216,7 +216,9 @@ position: relative;
     margin-right: 0px;
 }
 .control_input > input {
-    width: 7.5em;
+    width: 8em;
+    height: 15px;
+    font-size: 13px;
     margin: 0px;
     border: 3px solid rgba(0, 0, 0, 0.7);
     padding: 0px 5px 0px 5px;
