@@ -85,7 +85,7 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
             filter: new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.EQUAL_TO,
                 property: property,
-                value: value,
+                value: value
             }),
             context: ruleContext
         });
@@ -224,7 +224,7 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
     }));
     rulesSelect.push(rule("osmType = 'way'", {
         symbolizer: {
-            strokeWidth: 2,
+            strokeWidth: 2
         },
         minScaleDenominator: getScaleFromZoom(15)
     }));
@@ -277,7 +277,7 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
         },
         "augment" : {
             display : 'none'
-        },
+        }
     };
     styleMaps.old.addUniqueValueRules("default", "action", osmActionRules);
 
