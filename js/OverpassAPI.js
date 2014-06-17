@@ -114,7 +114,7 @@ OverpassAPI.prototype.loadDiff = function(from, to, postLoadCallback) {
         maxdate = ',"' + maxdate + '"';
     }
 
-    var data_url = 'http://overpass-api.de/api/interpreter_0750';
+    var data_url = 'http://overpass-api.de/api_0750/interpreter';
     url = data_url + '?data=[adiff:"' + mindate + '"' + maxdate
         + '];(node(bbox);way(bbox);relation(bbox););out meta geom(bbox);'
 
