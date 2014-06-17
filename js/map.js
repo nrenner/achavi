@@ -206,8 +206,8 @@
         var bboxControl = addBBoxControl(map, bboxChangeHandler);
 
         overpassAPI = new OverpassAPI(loader, bboxControl);
-        new Live(overpassAPI, status); 
-        new Diff(overpassAPI, status);
+        new Live(overpassAPI, status);
+        new Diff(overpassAPI, new Loading());
         
         var onClearClick = function(e) {
             for (var i = 0; i < layers.length; i++) {

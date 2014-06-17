@@ -39,6 +39,14 @@
                 load
             </div>
         </div>
+        <!-- Loading panel (spinner + cancel) -->
+        <div id="loading" class="border inner_border hidden">
+            <div id="spinner" class="text_content left_button">
+            </div>
+            <div id="cancel_button" class="button right_button">
+                cancel
+            </div>
+        </div>
         <!-- Player (disabled) -->
         <div id="top_buttons_border" class="border inner_border hidden">
             <div id="fast_backward_button" class="button left_button">
@@ -236,6 +244,7 @@
     <script src="js/OverpassAPI.js"></script>
     <script src="js/control/Live.js"></script>
     <script src="js/control/Player.js"></script>
+    <script src="js/control/Loading.js"></script>
     <script src="js/control/Diff.js"></script>
     <script src="js/control/Status.js"></script>
     <script src="js/XHRDebug.js"></script>

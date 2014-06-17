@@ -1,6 +1,6 @@
-function Diff(overpassAPI, status) {
+function Diff(overpassAPI, loading) {
     this.overpassAPI = overpassAPI;
-    this.status = status;
+    this.loading = loading;
 
     this.element = null;
 
@@ -15,7 +15,8 @@ function Diff(overpassAPI, status) {
         this.setDateTime(moment().subtract('days', 1));
     }
 
-    document.getElementById('load_button').onclick = _.bind(this.load, this);
+    this.loadButton = document.getElementById('load_button');
+    this.loadButton.onclick = _.bind(this.load, this);
 }
 
 Diff.prototype.getLastVisit = function() {
@@ -55,17 +56,14 @@ Diff.prototype.getTime = function(ele) {
 
 Diff.prototype.load = function() {
     var from = this.getTime(this.eleFromDatetime),
-        to = this.getTime(this.eleToDatetime);
-    this.status.loadStart();
-    this.overpassAPI.loadDiff(from, to, _.bind(this.postLoad, this));
-};
-
-Diff.prototype.updateStatus = function() {
-    this.status.countdown = null;
-    this.status.update();
+        to = this.getTime(this.eleToDatetime),
+        xhr;
+    xhr = this.overpassAPI.loadDiff(from, to, _.bind(this.postLoad, this));
+    this.loading.loadStart(xhr);
+    this.loadButton.classList.add('button_disabled');
 };
 
 Diff.prototype.postLoad = function() {
-    this.status.loadEnd();
-    this.updateStatus();
-};
+    this.loading.loadEnd();
+    this.loadButton.classList.remove('button_disabled');
+ };

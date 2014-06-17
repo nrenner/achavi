@@ -218,4 +218,5 @@ Loader.prototype.GET = function(config) {
     // text only, XML parsing done later for better control over memory issues
     xhr.overrideMimeType("text/plain");
     xhr.send();
+    return xhr;
 };

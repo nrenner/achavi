@@ -126,6 +126,7 @@ position: relative;
 .button_disabled {
     color: #888;
     cursor: default;
+    pointer-events: none;
 }
 .text_content,.text_content a {
     color: #BBB;
@@ -145,6 +146,11 @@ position: relative;
 #status_countdown {
     width: 1em;
     text-align: center;
+}
+
+#spinner {
+    height: 11px;
+    width: 16px;
 }
 .spinner {
     background-image: url(../img/loadinggif-4.gif);

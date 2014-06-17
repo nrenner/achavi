@@ -108,7 +108,8 @@ OverpassAPI.prototype.loadDiff = function(from, to, postLoadCallback) {
     var mindate = moment.utc(from).format('YYYY-MM-DDTHH:mm:ss\\Z'),
         maxdate = to ? moment.utc(to).format('YYYY-MM-DDTHH:mm:ss\\Z') : '',
         bboxParam,
-        url;
+        url,
+        xhr;
 
     if (maxdate) {
         maxdate = ',"' + maxdate + '"';
@@ -124,7 +125,7 @@ OverpassAPI.prototype.loadDiff = function(from, to, postLoadCallback) {
     bboxParam = OpenLayers.String.format('&bbox=${left},${bottom},${right},${top}', this.bbox);
     url += bboxParam;
 
-    this.loader.GET({
+    xhr = this.loader.GET({
         url: url,
         // do not zoom to data extent after load; option forwarded to load handler
         // (option only forwarded when using success event instead of callback)
@@ -133,4 +134,5 @@ OverpassAPI.prototype.loadDiff = function(from, to, postLoadCallback) {
         disableXRequestedWith: true,
         postLoadCallback: postLoadCallback
     });
+    return xhr;
 };
