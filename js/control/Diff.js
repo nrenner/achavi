@@ -1,6 +1,7 @@
-function Diff(overpassAPI, loading) {
+function Diff(overpassAPI, loading, status) {
     this.overpassAPI = overpassAPI;
     this.loading = loading;
+    this.status = status;
 
     this.element = null;
 
@@ -10,7 +11,7 @@ function Diff(overpassAPI, loading) {
     this.lastVisit = this.getLastVisit();
     if (this.lastVisit) {
         this.setDateTimeToLastVisit();
-        console.log('last visit: ' + moment(this.lastVisit).format("YYYY-MM-DD HH:mm:ss"));
+        //console.log('last visit: ' + moment(this.lastVisit).format("YYYY-MM-DD HH:mm:ss"));
     } else {
         this.setDateTime(moment().subtract('days', 1));
     }
@@ -66,4 +67,13 @@ Diff.prototype.load = function() {
 Diff.prototype.postLoad = function() {
     this.loading.loadEnd();
     this.loadButton.classList.remove('button_disabled');
+
+    // remember osm_base date as last visit when request was up to now (to empty)
+    if (!this.eleToDatetime.value && this.status.timestamp) {
+        try {
+            localStorage.setItem(Status.STORAGE_KEY_LAST_VISIT, this.status.timestamp);
+        } catch (err) {
+            console.warn('Failed to write last visit to localStorage: ' + err.message);
+        }
+    }
  };

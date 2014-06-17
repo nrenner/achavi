@@ -86,6 +86,7 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
                     }
                 }
                 console.log('osmDiff old: ' + osmFeatures.length + ', new: ' + oscFeatures.length);
+                this.status.timestamp = this.getOsmBaseTimestamp(doc);
             } else {
                 console.warn('deprecated diff format returned');
                 if (format.isAugmented(doc)) {
@@ -120,6 +121,19 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
         }
     }
 };
+
+Loader.prototype.getOsmBaseTimestamp = function(doc) {
+    var timestamp = null,
+        osmBase;
+    var metaList = doc.getElementsByTagName("meta");
+    if (metaList && metaList.length > 0) {
+        osmBase = metaList[0].getAttribute('osm_base');
+        if (osmBase) {
+            timestamp = moment(osmBase, 'YYYY-MM-DDTHH[\\]:mm[\\]:ssZ').valueOf();
+        }
+    }
+    return timestamp;
+},
 
 // options - {Object} Hash containing request, config and requestUrl keys
 Loader.prototype.success = function(options) {

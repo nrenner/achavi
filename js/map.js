@@ -207,7 +207,7 @@
 
         overpassAPI = new OverpassAPI(loader, bboxControl);
         new Live(overpassAPI, status);
-        new Diff(overpassAPI, new Loading());
+        new Diff(overpassAPI, new Loading(), status);
         
         var onClearClick = function(e) {
             for (var i = 0; i < layers.length; i++) {
