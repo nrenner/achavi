@@ -217,7 +217,7 @@
         };
         document.getElementById('clear_button').onclick = onClearClick;
         
-        var fileReaderControl = new FileReaderControl(loader.handleLoad);
+        var fileReaderControl = new FileReaderControl(_.bind(loader.handleLoad, loader));
         fileReaderControl.addUrlHandler(overpassAPI.sequenceUrlRegex, _.bind(overpassAPI.loadByUrl, overpassAPI));
         fileReaderControl.activate();
 	}
