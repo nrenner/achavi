@@ -106,11 +106,8 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
     rules.push(rule("osmType = 'relation'", {
         symbolizer: {
             strokeWidth: 6,
-            strokeOpacity : 0.5,
-            fillOpacity : 0.2,
-            strokeDashstyle: 'dash',
-            /* disable relations for now, map too cluttered */
-            display: 'none'
+            strokeOpacity : 0.2,
+            fillOpacity : 0.1
         }
     }));
 
@@ -209,10 +206,8 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
 
     rulesSelect.push(rule("osmType = 'relation'", {
         symbolizer: {
-            strokeOpacity : 1.0,
-            strokeColor: 'white',
-            /* disable relations for now, map too cluttered */
-            display: 'none'
+            strokeOpacity : 0.8,
+            strokeColor: 'white'
         }
     }));
 

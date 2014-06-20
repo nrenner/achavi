@@ -7,6 +7,7 @@ function Diff(overpassAPI, loading, status) {
 
     this.eleFromDatetime = document.getElementById('fromDatetime');
     this.eleToDatetime = document.getElementById('toDatetime');
+    this.eleRelations = document.getElementById('relations');
 
     this.lastVisit = this.getLastVisit();
     if (this.lastVisit) {
@@ -58,8 +59,9 @@ Diff.prototype.getTime = function(ele) {
 Diff.prototype.load = function() {
     var from = this.getTime(this.eleFromDatetime),
         to = this.getTime(this.eleToDatetime),
+        relations = this.eleRelations.checked,
         xhr;
-    xhr = this.overpassAPI.loadDiff(from, to, _.bind(this.postLoad, this));
+    xhr = this.overpassAPI.loadDiff(from, to, relations, _.bind(this.postLoad, this));
     this.loading.loadStart(xhr);
     this.loadButton.classList.add('button_disabled');
 };
