@@ -1,6 +1,6 @@
 (function() {
 
-	var displayProjection = "EPSG:4326";
+    var displayProjection = "EPSG:4326";
 
     var hover;
     var renderers = [ "SVG" ]; // Canvas
@@ -95,10 +95,10 @@
         var loader = new Loader(map, { changes: changes, old: old }, status);
 
         // load augmented change file passed as 'url' parameter
-		var parameters = OpenLayers.Control.ArgParser.prototype.getParameters();
-		if (parameters.url)  {
+        var parameters = OpenLayers.Control.ArgParser.prototype.getParameters();
+        if (parameters.url)  {
             loader.GET({url: parameters.url, zoomToExtent: !map.getCenter()});
-		}
+        }
 
         map.addLayer(old);
         map.addLayer(changes);
@@ -120,7 +120,7 @@
         map.addControl(hover);
         hover.activate();
 
-		addControls(map, vectorLayers, loader);
+        addControls(map, vectorLayers, loader);
 
         if (!map.getCenter()) {
             if (old.features.length > 0) {
@@ -135,14 +135,14 @@
             // map.setCenter(new OpenLayers.LonLat(lon,
             // lat).transform("EPSG:4326", map.getProjectionObject()), zoom);
         }
-		
+        
         /*
-		var parameters = OpenLayers.Control.ArgParser.prototype.getParameters();
-		if (parameters.live)  {
-			console.log("live");
-			live();
-		}
-		*/
+        var parameters = OpenLayers.Control.ArgParser.prototype.getParameters();
+        if (parameters.live)  {
+            console.log("live");
+            live();
+        }
+        */
     }
     
     function addBottomControls() {
@@ -159,22 +159,22 @@
         });
     }
 
-	function addBBoxControl(map, bboxChangeCallback) {
+    function addBBoxControl(map, bboxChangeCallback) {
 
-	    var col = 'rgba(255, 255, 255, 0.4)';
-	    bbox.style['default'].strokeColor = col;
-	    bbox.style['transform'].strokeColor = col;
-	    bbox.style['temporary'].strokeColor = col;
-	    
-		// bbox vector layer for drawing
+        var col = 'rgba(255, 255, 255, 0.4)';
+        bbox.style['default'].strokeColor = col;
+        bbox.style['transform'].strokeColor = col;
+        bbox.style['temporary'].strokeColor = col;
+        
+        // bbox vector layer for drawing
         var bboxLayer = new OpenLayers.Layer.Vector("bbox", {
             styleMap: bbox.createStyleMap(),
-			// for now, hide layer by default, because bbox select control disables/interferes with main select control
-			visibility: false
+            // for now, hide layer by default, because bbox select control disables/interferes with main select control
+            visibility: false
         });
         map.addLayer(bboxLayer);
 
-		// bbox control
+        // bbox control
         bbox.addControls(map, bboxLayer, {
             update : bboxChangeCallback,
             activate : function() {
@@ -193,7 +193,7 @@
         document.getElementById('bbox_button').onclick = onBBoxClick;
 
         return bbox;
-	}
+    }
 
     function addControls(map, layers, loader) {
         var overpassAPI;
@@ -220,7 +220,7 @@
         var fileReaderControl = new FileReaderControl(_.bind(loader.handleLoad, loader));
         fileReaderControl.addUrlHandler(overpassAPI.sequenceUrlRegex, _.bind(overpassAPI.loadByUrl, overpassAPI));
         fileReaderControl.activate();
-	}
+    }
 
 
     init();
