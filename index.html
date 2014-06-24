@@ -136,16 +136,22 @@
                         <strong>Usage</strong>
                         <ul>
                             <li>zoom in to your area of interest</li>
+                            <!--
                             <li>press 'live' to follow current changes, see 'Main buttons'</li>
                             <li><em>[experimental]:</em> to replay changes since your last visit, fast forward with '&gt;&gt;' (start time defaults to last visit)<br> 
                             or set time to 'now' and fast backward with '&lt;&lt;'. Fast forward/backward stops after a limit of 24h. See 'Player'</li>
-                            <li>to load changes at a specific point in time, enter date & time, press 'load' and go forward or backward from there.<br> 
-                            Augmented Diffs go back until October 2012.</li>
+                            -->
+                            <li>specify time range of changes to load, check to include relations, press 'load'.<br> 
+                                Attic data goes back until September 2012.</li>
+                        </ul>
+                        <ul>
+                            <li>For continuous monitoring bookmark the Permalink and simply press load each time, <br>
+                                the last load date will be preset as start date.</li>
                         </ul>
                         <ul>
                             <li>hover over feature to show popup, click on feature to keep popup open, click on map to close</li>
                             <li>zoom on changes with shift + drag zoom box</li>
-                            <li>changes displayed outside the bounding box affect crossing relations</li>
+                            <!--<li>changes displayed outside the bounding box affect crossing relations</li>-->
                         </ul>
                         </p>
                         <p>
@@ -166,12 +172,16 @@
                     <div id="about_content" class="hidden text_content">
                         <strong>achavi - Augmented OSM Change Viewer &nbsp;[alpha]</strong>
                         <p>
-                        Displays updates to OpenStreetMap based on minutely 
-                        <a href="http://wiki.openstreetmap.org/wiki/Overpass_API/Augmented_Diffs">Augmented Diffs</a> provided by Overpass API.
-                        <br>Tested on Firefox and Chrome; Internet Explorer and mobile not supported. 
+                        Note: This is an experimental version using the new attic feature of Overpass API v0.7.50. <br>The original version will
+                        remain online at <a href="http://overpass-api.de/achavi/">overpass-api.de/achavi/</a> until the attic database is rebuilt.
+                        </p>
                         <p>
-                        This is an early alpha version and many features are missing, like relation support, changeset<br> 
-                        information, navigation support and performance optimization. Also expect to find bugs.  
+                        Displays updates to OpenStreetMap based on 
+                        <a href="http://wiki.openstreetmap.org/wiki/Overpass_API/Augmented_Diffs">Augmented Diffs</a> provided by Overpass API.
+                        <br>Tested on Firefox and Chrome; older Internet Explorer and mobile not supported. 
+                        <p>
+                        This is an early alpha version and many features are missing, like better relation support, changeset<br> 
+                        information, textual list and/or summary of changes and performance optimization. Also expect to find bugs.  
                         <p>
                         Credits and licenses
                         <ul>
@@ -201,7 +211,7 @@
                             <li>Augmented Diffs: Roland Olbricht</li> 
                             <li>
                                 Viewer: <a href="http://www.openstreetmap.org/user/ikonor">Norbert Renner</a>
-                                - <a href="https://github.com/nrenner/achavi">GitHub</a>
+                                - <a href="https://github.com/nrenner/achavi/tree/attic">GitHub</a>
                             </li>
                         </ul>
 

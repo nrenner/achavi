@@ -4,8 +4,15 @@ var tooltips = (function() {
 
     var main = {
         bbox_button: "click and drag to draw bounding box (optional, else current map view is used), to display and edit activate 'bbox' layer",
-        live_button: "load latest diff and activate minutely refreshing",
+        /*live_button: "load latest diff and activate minutely refreshing",*/
         clear_button: "remove all loaded changes"
+    };
+
+    var diff = {
+        fromDatetime: "Enter start date & time (local time) of time range to load (Format: YYYY-MM-DD HH:mm). Defaults to -24h or last visit.",
+        toDatetime: "Enter end date & time (local time) of time range to load (Format: YYYY-MM-DD HH:mm), or leave empty. Defaults to current time.",
+        relations: "Check to also load changed relations, only basic support for relations right now.",
+        load_button: "Load changes in the specified time range"
     };
 
     var player = {
@@ -56,6 +63,7 @@ var tooltips = (function() {
     };
     
     setTitlesAndHelp(main, 'Main buttons');
-    setTitlesAndHelp(player, 'Player');
-    setTitlesAndHelp(status, 'Status bar');
+    setTitlesAndHelp(diff, 'Time range');
+    //setTitlesAndHelp(player, 'Player');
+    //setTitlesAndHelp(status, 'Status bar');
 })();
