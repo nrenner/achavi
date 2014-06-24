@@ -103,6 +103,14 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
     // rules
     var rules = [];
 
+    rules.push(rule("osmType = 'changeset'", {
+        symbolizer: {
+            strokeColor: '#ee9900',
+            strokeWidth: 4,
+            strokeOpacity : 0.5
+        }
+    }));
+
     rules.push(rule("osmType = 'relation'", {
         symbolizer: {
             strokeWidth: 6,
@@ -203,6 +211,12 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
     
     // select rules
     var rulesSelect = [];
+
+    rulesSelect.push(rule("osmType = 'changeset'", {
+        symbolizer: {
+            strokeOpacity : 0.8
+        }
+    }));
 
     rulesSelect.push(rule("osmType = 'relation'", {
         symbolizer: {

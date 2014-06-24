@@ -114,6 +114,11 @@ var oscviewer = (function() {
         return OpenLayers.Util.indexOf(metaAttrs, attr) !== -1;
     }
 
+    function isChangesetMetaAttribute(attr) {
+        var metaAttrs = OpenLayers.Format.OSMChangeset.prototype.metaAttributes;
+        return OpenLayers.Util.indexOf(metaAttrs, attr) !== -1;
+    }
+
     function getInfoHtml(oldFeature, changeFeature) {
         var keys = [];
         var oldTags = undefined;
@@ -152,7 +157,11 @@ var oscviewer = (function() {
             keys = keys.concat(_.keys(changeTags));
         }
         keys = _.filter(keys, function(key) {
-            return !isMetaAttribute(key);
+            if (osm.type === 'changeset') {
+                return !isChangesetMetaAttribute(key);
+            } else {
+                return !isMetaAttribute(key);
+            }
         });
         keys.sort();
         keys = _.unique(keys, true);
@@ -164,10 +173,11 @@ var oscviewer = (function() {
             changeTags = undefined;
         }
 
-        infoHtml += printMeta('timestamp', oldTags, changeTags, formatIsoDateTime);
-        infoHtml += printMeta('user', oldTags, changeTags, formatOsmLink);
-        infoHtml += printMeta('version', oldTags, changeTags);
-        infoHtml += printMeta('changeset', oldTags, changeTags, formatOsmLink);
+        if (osm.type === 'changeset') {
+            infoHtml += printChangesetMeta(oldTags);
+        } else {
+            infoHtml += printEntityMeta(oldTags, changeTags);
+        }
 
         infoHtml += '<tr><td class="tagsep" colspan="3"><hr/></td></tr>';
         infoHtml += printKeys(keys, oldTags, changeTags, action);
@@ -188,9 +198,39 @@ var oscviewer = (function() {
         return moment(dateTimeString).format('YYYY-MM-DD HH:mm');
     }
 
+    function formatIsoDateTimeSec(dateTimeString) {
+        // locale-independent, ISO-like format, but in user's local time zone
+        if (!dateTimeString) {
+            return '';
+        }
+        return moment(dateTimeString).format('YYYY-MM-DD HH:mm:ss');
+    }
+
     function formatOsmLink(val, type) {
         var path = (type === 'user') ? '' : 'browse/';
         return '<a href="http://www.openstreetmap.org/' + path + type + '/' + val + '" target="_blank">' + val + '</a>';
+    }
+
+    function printChangesetMeta(tags) {
+        var infoHtml = '';
+
+        infoHtml += printMeta('user', tags, null, formatOsmLink);
+        infoHtml += printMeta('created_at', tags, null, formatIsoDateTimeSec);
+        infoHtml += printMeta('closed_at', tags, null, formatIsoDateTimeSec);
+        infoHtml += printMeta('open', tags);
+
+        return infoHtml;
+    }
+
+    function printEntityMeta(oldTags, changeTags) {
+        var infoHtml = '';
+
+        infoHtml += printMeta('timestamp', oldTags, changeTags, formatIsoDateTime);
+        infoHtml += printMeta('user', oldTags, changeTags, formatOsmLink);
+        infoHtml += printMeta('version', oldTags, changeTags);
+        infoHtml += printMeta('changeset', oldTags, changeTags, formatOsmLink);
+
+        return infoHtml;
     }
 
     function printMeta(key, oldTags, changeTags, format) {

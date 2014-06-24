@@ -5,7 +5,11 @@
     var hover;
     var renderers = [ "SVG" ]; // Canvas
     
-    var status;
+    var status,
+        loader,
+        loading,
+        overpassAPI,
+        changesetRegex;
 
     function addBaseLayers(map) {
 
@@ -63,15 +67,12 @@
         var styler = new OSMChangeStyle(map);
         styleMaps = styler.getStyleMaps();
 
-        /*
-        changesets = new OpenLayers.Layer.Vector("changesets", {
+        changesets = new OpenLayers.Layer.Vector("changeset", {
             projection : map.displayProjection,
             visibility : true,
-            // styleMap : styleMaps.old,
+            styleMap : styleMaps.changes,
             renderers : renderers
         });
-        map.addLayer(changesets);
-        */
 
         old = new OpenLayers.Layer.Vector("old", {
             projection : map.displayProjection,
@@ -92,16 +93,23 @@
         });
 
         status = new Status();
-        var loader = new Loader(map, { changes: changes, old: old }, status);
-
-        // load augmented change file passed as 'url' parameter
+        loading = new Loading();
+        loader = new Loader(map, { changes: changes, old: old, changesets: changesets }, status);
         var parameters = OpenLayers.Control.ArgParser.prototype.getParameters();
-        if (parameters.url)  {
-            loader.GET({url: parameters.url, zoomToExtent: !map.getCenter()});
+        if (parameters.url) {
+            // load augmented change file passed as 'url' parameter
+            loader.GET({url: parameters.url, zoomToExtent: true});
+        }
+        if (parameters.changeset) {
+            loadChangeset(parameters.changeset);
         }
 
+        map.addLayer(changesets);
         map.addLayer(old);
         map.addLayer(changes);
+
+        var vectorLayers = [ old, changes, changesets ];
+        addControls(map, vectorLayers);
 
         // hover + select
         var handler = new PopupHandler(map, old, changes);
@@ -114,13 +122,10 @@
             },
             onUnselect : handler.onFeatureUnselect
         };
-        //var vectorLayers = [ old, changes, changesets ];
-        var vectorLayers = [ old, changes ];
+
         hover = new OpenLayers.Control.HoverAndSelectFeature(vectorLayers, options);
         map.addControl(hover);
         hover.activate();
-
-        addControls(map, vectorLayers, loader);
 
         if (!map.getCenter()) {
             if (old.features.length > 0) {
@@ -135,14 +140,6 @@
             // map.setCenter(new OpenLayers.LonLat(lon,
             // lat).transform("EPSG:4326", map.getProjectionObject()), zoom);
         }
-        
-        /*
-        var parameters = OpenLayers.Control.ArgParser.prototype.getParameters();
-        if (parameters.live)  {
-            console.log("live");
-            live();
-        }
-        */
     }
     
     function addBottomControls() {
@@ -195,8 +192,7 @@
         return bbox;
     }
 
-    function addControls(map, layers, loader) {
-        var overpassAPI;
+    function addControls(map, layers) {
 
         addBottomControls();
 
@@ -207,7 +203,7 @@
 
         overpassAPI = new OverpassAPI(loader, bboxControl);
         new Live(overpassAPI, status);
-        new Diff(overpassAPI, new Loading(), status);
+        new Diff(overpassAPI, loading, status);
         
         var onClearClick = function(e) {
             for (var i = 0; i < layers.length; i++) {
@@ -219,9 +215,45 @@
         
         var fileReaderControl = new FileReaderControl(_.bind(loader.handleLoad, loader));
         fileReaderControl.addUrlHandler(overpassAPI.sequenceUrlRegex, _.bind(overpassAPI.loadByUrl, overpassAPI));
+        changesetRegex = /.*\/changeset\/([0-9]*)/;
+        fileReaderControl.addUrlHandler(changesetRegex, loadChangesetByUrl);
         fileReaderControl.activate();
     }
 
+    function loadChangesetByUrl(url) {
+        var id = parseInt(url.replace(changesetRegex, "$1"));
+        loadChangeset(id);
+    }
+
+    function loadChangeset(id) {
+        
+        function handleDiff() {
+            loading.loadEnd();
+        }
+
+        function handleChangeset() {
+            var csFeature, cs, bbox, xhr, from, to;
+
+            csFeature = changesets.getFeatureByFid('changeset.' + id);
+            if (csFeature) {
+                cs = csFeature.attributes;
+                from = cs.created_at;
+                to = cs.closed_at;
+                bbox = new OpenLayers.Bounds(cs.min_lon, cs.min_lat, cs.max_lon, cs.max_lat);
+                overpassAPI.bbox = bbox;
+
+                // TODO relations (checkbox?)
+                xhr = overpassAPI.loadDiff(from, to, false, handleDiff);
+                loading.loadStart(xhr);
+            }
+        }
+
+        loader.GET({
+            url: 'http://www.openstreetmap.org/api/0.6/changeset/' + id, 
+            zoomToExtent: true,
+            postLoadCallback: handleChangeset
+        });
+    }
 
     init();
 })();

@@ -48,8 +48,15 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
     console.timeEnd("xml");
     if (format) {
         if (desc.type === 'osmChangeset') {
-            this.layers.changesets.addFeatures(format.read(doc));
-            // TODO read corresponding diff
+            var features = format.read(doc),
+                changesetFeature = features[0];
+                cs = changesetFeature.attributes;
+
+            // line instead of polygon, popup only on changeset boundary
+            changesetFeature.geometry =  new OpenLayers.Geometry.LineString(
+                changesetFeature.geometry.components[0].components);
+            this.layers.changesets.addFeatures(features);
+
             this.map.zoomToExtent(changesets.getDataExtent());
         } else {
             console.time("read");
