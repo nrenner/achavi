@@ -52,7 +52,7 @@
         map = new OpenLayers.Map(options);
 
         var cAttribution = new OpenLayers.Control.Attribution();
-        cAttribution.template = "achavi&nbsp&nbsp-&nbsp&nbsp${layers}";
+        cAttribution.template = "achavi [attic]&nbsp&nbsp-&nbsp&nbsp${layers}";
         map.addControl(cAttribution);
         // map.addControl(new OpenLayers.Control.LayerSwitcher());
         map.addControl(new OpenLayers.Control.LayerSwitcherBorder());
