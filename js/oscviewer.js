@@ -89,12 +89,30 @@ var oscviewer = (function() {
         }
     }
 
+    function isChanged(osmFeature, oscFeature) {
+        var geometryChanged = !oscFeature.geometry.equals(osmFeature.geometry);
+        var tagsChanged = isTagsChanged(osmFeature, oscFeature);
+        
+        return geometryChanged || tagsChanged;
+    }
+    
+    function isTagsChanged(osmFeature, oscFeature) {
+        var osmTags = getTags(osmFeature);
+        var oscTags = getTags(oscFeature);
+        
+        return !_.isEqual(osmTags, oscTags);
+    }
+
     function setModifyAction(osmFeature, oscFeature) {
         var action = oscFeature.geometry.equals(osmFeature.geometry) ? 'modify' : ACTION_MODIFY_GEOMETRY;
         osmFeature.attributes['action'] = action;
         oscFeature.attributes['action'] = action;
     }
 
+    function getTags(feature) {
+        return _.omit(feature.attributes, OpenLayers.Format.OSC.prototype.metaAttributes);
+    }
+    
     function getHasTags(feature) {
         var result = false;
         for (var attr in feature.attributes) {
@@ -333,6 +351,7 @@ var oscviewer = (function() {
         setActions : setActions,
         getInfoHtml: getInfoHtml,
         getOsmType: getOsmType,
-        formatIsoDateTime: formatIsoDateTime
+        formatIsoDateTime: formatIsoDateTime,
+        isChanged: isChanged
     };
 })();

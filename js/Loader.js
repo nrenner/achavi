@@ -45,6 +45,9 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
     var feature;
     var state;
     var i = 0;
+    var old = null;
+    var filtered;
+
     console.timeEnd("xml");
     if (format) {
         if (desc.type === 'osmChangeset') {
@@ -86,10 +89,33 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
                     feature.attributes = feature.tags;
                     feature.attributes.state = state;
                     feature.attributes.action = feature.action;
+
+                    // pair old and new feature for filtering
+                    // assume features ordered in old/new pairs (or old or new only)
+
                     if (state === 'old') {
-                        osmFeatures.push(feature);
+                        if (old) {
+                            // old after old, just in case (delete now always has new)
+                            osmFeatures.push(old);
+                        }
+                        // don't add now, keep to pair with new for filtering
+                        old = feature;
                     } else {
-                        oscFeatures.push(feature);
+                        filtered = true;
+
+                        // omit entities with no changes in scope, e.g. ways and relations reported 
+                        // as modified but geometry unchanged inside bbox (node/member changed outside)
+                        if (old && !oscviewer.isChanged(old, feature)) {
+                            filtered = false;
+                        }
+                        
+                        if (filtered) {
+                            if (old) {
+                                osmFeatures.push(old);
+                                old = null;
+                            }
+                            oscFeatures.push(feature);
+                        }
                     }
                 }
                 console.log('osmDiff old: ' + osmFeatures.length + ', new: ' + oscFeatures.length);
