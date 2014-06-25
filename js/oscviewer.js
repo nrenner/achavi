@@ -1,5 +1,7 @@
 var oscviewer = (function() {
 
+    var ACTION_MODIFY_GEOMETRY = 'modify:geometry';
+
     function buildFidMap(features) {
         var map = {};
         for(var i=0, len=features.length; i < len; i++) {
@@ -70,14 +72,25 @@ var oscviewer = (function() {
                         oscFeature.attributes['action'] = 'create';
                     }
                 }
-            } 
+            }
+
+            // handle special cases when old or new entity is out of scope
+            // (geometry entering or leaving the bounding box)
+            if (action === 'create' && oscFeature.attributes.version > 1) {
+                oscFeature.scopeAction = action;
+                oscFeature.attributes.action = ACTION_MODIFY_GEOMETRY;
+            } else if (action === 'delete' && oscFeature.attributes.visible === 'true') {
+                oscFeature.scopeAction = action;
+                osmFeature.attributes.action = ACTION_MODIFY_GEOMETRY;
+                oscFeature.attributes.action = ACTION_MODIFY_GEOMETRY;
+            }
             
             setHasTags(osmFeature, oscFeature);
         }
     }
 
     function setModifyAction(osmFeature, oscFeature) {
-        var action = oscFeature.geometry.equals(osmFeature.geometry) ? 'modify' : 'modify:geometry';
+        var action = oscFeature.geometry.equals(osmFeature.geometry) ? 'modify' : ACTION_MODIFY_GEOMETRY;
         osmFeature.attributes['action'] = action;
         oscFeature.attributes['action'] = action;
     }
@@ -109,6 +122,9 @@ var oscviewer = (function() {
     OpenLayers.Format.OSC.prototype.metaAttributes.push('action');
     OpenLayers.Format.OSC.prototype.metaAttributes.push('state');
 
+    // 'visible' only set in attic format when entity moved out of bbox (-> action=delete)
+    OpenLayers.Format.OSMMeta.prototype.metaAttributes.push('visible');
+
     function isMetaAttribute(attr) {
         var metaAttrs = OpenLayers.Format.OSC.prototype.metaAttributes;
         return OpenLayers.Util.indexOf(metaAttrs, attr) !== -1;
@@ -129,6 +145,7 @@ var oscviewer = (function() {
             type : getOsmType(feature)
         };
         var action = feature.attributes['action'] || '';
+        var tagColoring = !feature.scopeAction; // no tag comparison when one feature out of scope
 
         var infoHtml = '';
         infoHtml += '<div class="border">';
@@ -142,7 +159,10 @@ var oscviewer = (function() {
         infoHtml += ' ' + formatOsmLink(osm.id, osm.type);
         infoHtml += '</div>';
 
-        if (!oldFeature && action != 'create') {
+        if (feature.scopeAction) {
+            var scopeText = feature.scopeAction === 'create' ? 'old' : 'new';
+            infoHtml += '<div class="warning">Note: ' + scopeText + ' entity out of scope</div>';
+        } else if (!oldFeature && action != 'create') {
             infoHtml += '<div class="warning">Warning: Old feature not found,<br/>probably not included in OSM file</div>';
         }
 
@@ -180,7 +200,7 @@ var oscviewer = (function() {
         }
 
         infoHtml += '<tr><td class="tagsep" colspan="3"><hr/></td></tr>';
-        infoHtml += printKeys(keys, oldTags, changeTags, action);
+        infoHtml += printKeys(keys, oldTags, changeTags, action, tagColoring);
 
         infoHtml += '</table>';
         infoHtml += '</div>';
@@ -252,7 +272,7 @@ var oscviewer = (function() {
         return infoHtml;
     }
 
-    function printKeys(keys, oldTags, changeTags, action) {
+    function printKeys(keys, oldTags, changeTags, action, coloring) {
         var i;
         var oldVal, changeVal;
         var classes;
@@ -261,7 +281,7 @@ var oscviewer = (function() {
             key = keys[i];
             oldVal = oldTags && oldTags[key];
             changeVal = changeTags && changeTags[key];
-            classes = (oldTags && changeTags) ? getClasses(oldVal, changeVal, action) : getDefaultClasses();
+            classes = (oldTags && changeTags && coloring) ? getClasses(oldVal, changeVal, action) : getDefaultClasses();
             infoHtml += '<tr><td class="tagkey ' + classes.key + '">' + key + '</td>';
             if (oldTags) {
                 infoHtml += '<td class="' + classes.old + '">' + val(oldVal) + '</td>';
