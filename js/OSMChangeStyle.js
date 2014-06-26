@@ -113,10 +113,24 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
 
     rules.push(rule("osmType = 'relation'", {
         symbolizer: {
-            strokeWidth: 6,
-            strokeOpacity : 0.2,
+            strokeWidth: 10,
+            strokeOpacity : 0.4,
             fillOpacity : 0.1
         }
+    }));
+    rules.push(rule("osmType = 'relation'", {
+        symbolizer: {
+            strokeWidth: 6,
+            strokeOpacity : 0.3
+        },
+        minScaleDenominator: getScaleFromZoom(18)
+    }));
+    rules.push(rule("osmType = 'relation'", {
+        symbolizer: {
+            strokeWidth: 4,
+            strokeOpacity : 0.2
+        },
+        minScaleDenominator: getScaleFromZoom(15)
     }));
 
     rules.push(rule("osmType = 'way'", {
