@@ -239,6 +239,11 @@
                 cs = csFeature.attributes;
                 from = cs.created_at;
                 to = cs.closed_at;
+                if (from) {
+                    // workaround: no result when same start and end date (e.g. changeset 23168078), not sure if needed generally
+                    // https://github.com/drolbr/Overpass-API/issues/113
+                    from = moment(cs.closed_at, 'YYYY-MM-DDTHH:mm:ss\\Z').subtract('seconds', 1).format('YYYY-MM-DDTHH:mm:ss\\Z');
+                }
                 bbox = new OpenLayers.Bounds(cs.min_lon, cs.min_lat, cs.max_lon, cs.max_lat);
                 overpassAPI.bbox = bbox;
 
