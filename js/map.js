@@ -96,11 +96,14 @@
         loading = new Loading();
         loader = new Loader(map, { changes: changes, old: old, changesets: changesets }, status);
         var parameters = OpenLayers.Control.ArgParser.prototype.getParameters();
-        if (parameters.url) {
-            // load augmented change file passed as 'url' parameter
-            loader.GET({url: parameters.url, zoomToExtent: true});
+        if (parameters.relations) {
+            document.getElementById('relations').checked = parameters.relations === 'true';
         }
-        if (parameters.changeset) {
+        if (parameters.url) {
+            // load augmented change file passed as 'url' parameter; 
+            // optional changeset param for filtering by changeset
+            loader.GET({url: parameters.url, zoomToExtent: true, changeset: parameters.changeset});
+        } else if (parameters.changeset) {
             loadChangeset(parameters.changeset);
         }
 
@@ -221,7 +224,7 @@
     }
 
     function loadChangesetByUrl(url) {
-        var id = parseInt(url.replace(changesetRegex, "$1"));
+        var id = url.match(changesetRegex)[1];
         loadChangeset(id);
     }
 
@@ -232,7 +235,7 @@
         }
 
         function handleChangeset() {
-            var csFeature, cs, bbox, xhr, from, to;
+            var csFeature, cs, bbox, xhr, from, to, relations;
 
             csFeature = changesets.getFeatureByFid('changeset.' + id);
             if (csFeature) {
@@ -247,8 +250,8 @@
                 bbox = new OpenLayers.Bounds(cs.min_lon, cs.min_lat, cs.max_lon, cs.max_lat);
                 overpassAPI.bbox = bbox;
 
-                // TODO relations (checkbox?)
-                xhr = overpassAPI.loadDiff(from, to, true, handleDiff);
+                relations = document.getElementById('relations').checked;
+                xhr = overpassAPI.loadDiff(from, to, relations, handleDiff, id);
                 loading.loadStart(xhr);
             }
         }
