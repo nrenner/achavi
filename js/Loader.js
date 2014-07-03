@@ -105,10 +105,6 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
                     // assume features ordered in old/new pairs (or old or new only)
 
                     if (state === 'old') {
-                        if (old) {
-                            // old after old, just in case (delete now always has new)
-                            osmFeatures.push(old);
-                        }
                         // don't add now, keep to pair with new for filtering
                         old = feature;
                     } else {
