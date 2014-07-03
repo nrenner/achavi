@@ -107,7 +107,7 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
         symbolizer: {
             strokeColor: '#ee9900',
             strokeWidth: 4,
-            strokeOpacity : 0.5
+            strokeOpacity : 0.3
         }
     }));
 

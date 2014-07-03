@@ -47,6 +47,8 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
     var i = 0;
     var old = null;
     var filtered;
+    var changesByFid = {}
+    var changeset = options && options.changeset;
 
     console.timeEnd("xml");
     if (format) {
@@ -81,6 +83,15 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
             } else if (desc.type === 'osmDiff') {
                 format.extent = null;
                 features = format.read(doc);
+
+                // fid hash, build first because of feature order (nodes after ways)
+                for (i = 0; i < features.length; i++) {
+                    feature = features[i];
+                    if (feature.attributes.state === 'new') {
+                        changesByFid[feature.fid] = feature;
+                    }
+                }
+
                 for (i = 0; i < features.length; i++) {
                     feature = features[i];
                     state = feature.attributes.state;
@@ -108,14 +119,26 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
                         if (old && !oscviewer.isChanged(old, feature)) {
                             filtered = false;
                         }
-                        
+
+                        // filter by changeset when loading a changeset based on time range and bbox
+                        if (filtered && changeset && !(
+                                    feature.attributes.changeset === changeset 
+                                       // modified way/relation where only node or member geometry changed
+                                    || (old && old.attributes.version === feature.attributes.version
+                                        && (feature.type === 'way' && this.isWayChangeInChangeset(changesByFid, feature, changeset)
+                                         || feature.type === 'relation' /* TODO this.isRelationChangeInChangeset */))
+                                )) {
+                            filtered = false;
+                            //console.log('===== changeset filtered out: ' + feature.fid + ' (' + feature.attributes.changeset + ' != ' + changeset + ') =====');
+                        }
+
                         if (filtered) {
                             if (old) {
                                 osmFeatures.push(old);
-                                old = null;
                             }
                             oscFeatures.push(feature);
                         }
+                        old = null;
                     }
                 }
                 console.log('osmDiff old: ' + osmFeatures.length + ', new: ' + oscFeatures.length);
@@ -154,6 +177,25 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
         }
     }
 };
+
+Loader.prototype.isWayChangeInChangeset = function(changesByFid, change, changeset) {
+    var result = false,
+        points = change.geometry.components,
+        i,
+        node;
+    
+    for (i = 0; i < points.length; i++) {
+        node = changesByFid['node.' + points[i].ref];
+        if (node && node.tags.changeset === changeset) {
+            result = true;
+            break;
+        }
+    }
+    if (!result) {
+        console.log('----- ' + change.fid + ' change not in changeset -----');
+    }
+    return result;
+}
 
 Loader.prototype.getOsmBaseTimestamp = function(doc) {
     var timestamp = null,
