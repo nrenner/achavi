@@ -104,20 +104,24 @@ OverpassAPI.prototype.load = function(sequence, postLoadCallback) {
     }
 };
 
-OverpassAPI.prototype.loadDiff = function(from, to, relations, postLoadCallback) {
+OverpassAPI.prototype.loadDiff = function(from, to, relations, postLoadCallback, changeset) {
     var mindate = moment.utc(from).format('YYYY-MM-DDTHH:mm:ss\\Z'),
         maxdate = to ? moment.utc(to).format('YYYY-MM-DDTHH:mm:ss\\Z') : '',
         bboxParam,
         url,
-        xhr;
+        xhr,
+        dateRange,
+        changed;
 
     if (maxdate) {
         maxdate = ',"' + maxdate + '"';
     }
-
+    dateRange = '"' + mindate + '"' + maxdate;
+    changed = changeset ? '(changed:' + dateRange + ')' : '';
+        
     var data_url = 'http://overpass-api.de/api/interpreter';
-    url = data_url + '?data=[adiff:"' + mindate + '"' + maxdate
-        + '];(node(bbox);way(bbox);' + (relations ? 'relation(bbox);' : '') + ');out meta geom(bbox);';
+    url = data_url + '?data=[adiff:' + dateRange
+        + '];(node' + changed + '(bbox);way' + changed + '(bbox);' + (relations ? 'relation' + changed + '(bbox);' : '') + ');out meta geom(bbox);';
 
     if (!this.bbox) {
       this.bbox = this.bboxControl.addBBoxFromViewPort();
@@ -132,7 +136,8 @@ OverpassAPI.prototype.loadDiff = function(from, to, relations, postLoadCallback)
         zoomToExtent: false,
         // do not send X-Requested-With header (option added by olex.Request-patch)
         disableXRequestedWith: true,
-        postLoadCallback: postLoadCallback
+        postLoadCallback: postLoadCallback,
+        changeset: changeset
     });
     return xhr;
 };
