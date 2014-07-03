@@ -76,10 +76,15 @@ var oscviewer = (function() {
 
             // handle special cases when old or new entity is out of scope
             // (geometry entering or leaving the bounding box)
+            /* disabled: falsly reports summarized changes as out of scope
+               (e.g. create v1 + modify v2 = create v2).
+               Can't distinguish these cases only by version number.
             if (action === 'create' && oscFeature.attributes.version > 1) {
                 oscFeature.scopeAction = action;
                 oscFeature.attributes.action = ACTION_MODIFY_GEOMETRY;
-            } else if (action === 'delete' && oscFeature.attributes.visible === 'true') {
+            } else 
+            */
+            if (action === 'delete' && oscFeature.attributes.visible === 'true') {
                 oscFeature.scopeAction = action;
                 osmFeature.attributes.action = ACTION_MODIFY_GEOMETRY;
                 oscFeature.attributes.action = ACTION_MODIFY_GEOMETRY;
