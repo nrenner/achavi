@@ -97,8 +97,9 @@ var oscviewer = (function() {
     function isChanged(osmFeature, oscFeature) {
         var geometryChanged = !oscFeature.geometry.equals(osmFeature.geometry);
         var tagsChanged = isTagsChanged(osmFeature, oscFeature);
+        var rolesChanged = oscFeature.type === 'relation' && isRolesChanged(osmFeature, oscFeature);
         
-        return geometryChanged || tagsChanged;
+        return geometryChanged || tagsChanged || rolesChanged;
     }
     
     function isTagsChanged(osmFeature, oscFeature) {
@@ -106,6 +107,13 @@ var oscviewer = (function() {
         var oscTags = getTags(oscFeature);
         
         return !_.isEqual(osmTags, oscTags);
+    }
+
+    function isRolesChanged(osmFeature, oscFeature) {
+        var osmRoles = getRoles(osmFeature);
+        var oscRoles = getRoles(oscFeature);
+        
+        return !_.isEqual(osmRoles, oscRoles);
     }
 
     function setModifyAction(osmFeature, oscFeature) {
@@ -116,6 +124,10 @@ var oscviewer = (function() {
 
     function getTags(feature) {
         return _.omit(feature.attributes, OpenLayers.Format.OSC.prototype.metaAttributes);
+    }
+
+    function getRoles(feature) {
+        return _.map(feature.geometry.components, function(member){ return member.role; });
     }
     
     function getHasTags(feature) {
