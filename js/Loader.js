@@ -187,9 +187,11 @@ Loader.prototype.isWayChangeInChangeset = function(changesByFid, change, changes
             break;
         }
     }
+    /*
     if (!result) {
         console.log('----- ' + change.fid + ' change not in changeset -----');
     }
+    */
     return result;
 }
 
