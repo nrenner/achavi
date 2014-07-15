@@ -1,6 +1,8 @@
-# achavi - Augmented OSM Change Viewer - alpha
+# achavi - Augmented OSM Change Viewer - attic
 
-Displays updates to [OpenStreetMap](openstreetmap.org) based on minutely [Augmented Diffs](http://wiki.openstreetmap.org/wiki/Overpass_API/Augmented_Diffs) provided by [Overpass API](http://overpass-api.de/augmented_diffs/).
+Displays updates to [OpenStreetMap](openstreetmap.org), now based on [Augmented Delta (adiff)](http://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Augmented_Delta_between_two_dates_.28.22adiff.22.29) query provided by [Overpass API](http://overpass-api.de/) and it's new attic data feature.
+
+Experimental attic version: http://nrenner.github.io/achavi/
 
 *work in progress*
 
@@ -8,7 +10,7 @@ See [olex](https://github.com/nrenner/olex) repository for OpenLayers-related so
 
 ## License
 
-TBD
+Copyright (c) 2014 Norbert Renner, licensed under the [MIT License (MIT)](LICENSE)
 
 ## Install
 
