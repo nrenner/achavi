@@ -110,18 +110,16 @@ OverpassAPI.prototype.loadDiff = function(from, to, relations, postLoadCallback,
         bboxParam,
         url,
         xhr,
-        dateRange,
-        changed;
+        dateRange;
 
     if (maxdate) {
         maxdate = ',"' + maxdate + '"';
     }
     dateRange = '"' + mindate + '"' + maxdate;
-    changed = changeset ? '(changed:' + dateRange + ')' : '';
-        
+
     var data_url = 'http://overpass-api.de/api/interpreter';
     url = data_url + '?data=[adiff:' + dateRange
-        + '];(node' + changed + '(bbox);way' + changed + '(bbox);' + (relations ? 'relation' + changed + '(bbox);' : '') + ');out meta geom(bbox);';
+        + '];(node(bbox)(changed);way(bbox)(changed);' + (relations ? 'relation(bbox)(changed);' : '') + ');out meta geom(bbox);';
 
     if (!this.bbox) {
       this.bbox = this.bboxControl.addBBoxFromViewPort();
