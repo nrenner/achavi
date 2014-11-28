@@ -234,14 +234,14 @@ position: relative;
 }
 .control_checkbox {
     margin-right: 0px;
-    padding: 0px 1px 1px 5px;
+    padding: 0px 1px 0px 3px;
     background-color: rgba(0, 0, 0, 0.7);
     color: #888;
     font-size: small;
 }
 .control_checkbox > input[type=checkbox] {
-    margin-top: 4px;
-    margin-left: 2px;
+    /* normalize Firefox (14px) and Chrome (13px) + 1 for alignment */
+    height: 15px;
 }
 .inner_label {
     float: left;
