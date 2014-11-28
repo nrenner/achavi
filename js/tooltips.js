@@ -50,9 +50,9 @@ var tooltips = (function() {
             if (id.substr(0,6) === 'status') {
                 // for the status bar, set tooltip on labels as well 
                 ele.previousElementSibling.setAttribute('title', map[id]);
-                label = ele.previousElementSibling.innerText;
+                label = ele.previousElementSibling.textContent;
             } else {
-                label = ele.innerText;
+                label = ele.textContent;
             }
             //html += '<tr><td>' + label + '</td><td>' + map[id] + '</td></tr>';
             html += '<div class="help_row"><div class="label_col">' + label + '</div><div class="description_col">' + map[id] + '</div></div>';
