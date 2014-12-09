@@ -149,6 +149,10 @@
                                 the last load date will be preset as start date.</li>
                         </ul>
                         <ul>
+                            <li>A single changeset can be visualized by drag & drop of a changeset URL or using a bookmarklet, see 
+                              <a href="http://wiki.openstreetmap.org/wiki/Achavi#Bookmarklet">Wiki page</a>.</li>
+                        </ul>
+                        <ul>
                             <li>hover over feature to show popup, click on feature to keep popup open, click on map to close</li>
                             <li>zoom on changes with shift + drag zoom box</li>
                             <!--<li>changes displayed outside the bounding box affect crossing relations</li>-->
@@ -172,12 +176,9 @@
                     <div id="about_content" class="hidden text_content">
                         <strong>achavi - Augmented OSM Change Viewer &nbsp;[attic]</strong>
                         <p>
-                        Note: This is an experimental version using the new attic feature of Overpass API v0.7.50. <br>The original version will
-                        remain online at <a href="http://overpass-api.de/achavi/">overpass-api.de/achavi/</a> until the attic database is rebuilt.
-                        </p>
-                        <p>
-                        Displays updates to OpenStreetMap based on 
-                        <a href="http://wiki.openstreetmap.org/wiki/Overpass_API/Augmented_Diffs">Augmented Diffs</a> provided by Overpass API.
+                        Displays OpenStreetMap changes based on the Overpass API 
+                        <a href="http://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Augmented_Delta_between_two_dates_.28.22adiff.22.29">Augmented Delta (adiff)</a> query and the 
+                        <a href="http://wiki.openstreetmap.org/wiki/Overpass_API/Augmented_Diffs#Contained_data">Augmented Diff</a> format.
                         <br>Tested on Firefox and Chrome; older Internet Explorer and mobile not supported. 
                         <p>
                         This is an early alpha version and many features are missing, like better relation support, changeset<br> 
@@ -208,7 +209,7 @@
                         
                         Contact and authors:
                         <ul>
-                            <li>Augmented Diffs: Roland Olbricht</li> 
+                            <li><a href="http://overpass-api.de/">Overpass API</a>: Roland Olbricht</li> 
                             <li>
                                 Viewer: <a href="http://www.openstreetmap.org/user/ikonor">Norbert Renner</a>
                                 - <a href="https://github.com/nrenner/achavi/tree/attic">GitHub</a>
