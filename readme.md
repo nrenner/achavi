@@ -1,10 +1,10 @@
-# achavi - Augmented OSM Change Viewer - attic
+# achavi - Augmented OSM Change Viewer
 
 Displays [OpenStreetMap](openstreetmap.org) changes based on the [Overpass API](http://overpass-api.de/) [Augmented Delta (adiff)](http://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Augmented_Delta_between_two_dates_.28.22adiff.22.29) query and the
 [Augmented Diff](http://wiki.openstreetmap.org/wiki/Overpass_API/Augmented_Diffs#Contained_data) format.
 
-http://overpass-api.de/achavi/ (production)  
-http://nrenner.github.io/achavi/ (development, test)
+http://overpass-api.de/achavi/ - production (master)  
+http://nrenner.github.io/achavi/ - development, test (gh-pages)
 
 *work in progress*
 
