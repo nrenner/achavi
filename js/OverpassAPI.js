@@ -20,7 +20,7 @@ OverpassAPI.prototype.getSequenceUrl = function(sequence) {
         c : s.substring(6, 9)
     };
     //var urlFormat = 'http://overpass-api.de/augmented_diffs/${a}/${b}/${c}.osc.gz';
-    var urlFormat = 'http://overpass-api.de/augmented_diffs/id_sorted/${a}/${b}/${c}.osc.gz';
+    var urlFormat = 'https://overpass-api.de/augmented_diffs/id_sorted/${a}/${b}/${c}.osc.gz';
    
     var url = OpenLayers.String.format(urlFormat, path);
     return url;
@@ -40,7 +40,7 @@ OverpassAPI.prototype.parseSequence = function (request, url) {
 
 OverpassAPI.prototype.getCurrentSequence = function () {
     var sequence = -1;
-    var url = "http://overpass-api.de/augmented_diffs/state.txt";
+    var url = "https://overpass-api.de/augmented_diffs/state.txt";
 
     OpenLayers.Request.GET({
         url: url,
@@ -57,7 +57,7 @@ OverpassAPI.prototype.getCurrentSequence = function () {
 OverpassAPI.prototype.getSequenceByTime = function (timestamp, callback) {
     var osmBase = moment.utc(timestamp).format('YYYY-MM-DDTHH[\\]:mm[\\]:ss\\Z');
     console.log('load time: ' + osmBase);
-    var url = 'http://overpass-api.de/api/augmented_state_by_date?osm_base=' + osmBase;
+    var url = 'https://overpass-api.de/api/augmented_state_by_date?osm_base=' + osmBase;
     console.log('requesting state ' + url);
     OpenLayers.Request.GET({
         url: url,
@@ -82,7 +82,7 @@ OverpassAPI.prototype.loadByUrl = function(url) {
 OverpassAPI.prototype.load = function(sequence, postLoadCallback) {
     var bboxParam;
     if (sequence && sequence >= 0) {
-        var url = "http://overpass-api.de/api/augmented_diff?id=" + sequence + "&info=no";
+        var url = "https://overpass-api.de/api/augmented_diff?id=" + sequence + "&info=no";
         //var url = getSequenceUrl(sequence);
         if (!this.bbox) {
             this.bbox = this.bboxControl.addBBoxFromViewPort();
@@ -117,7 +117,7 @@ OverpassAPI.prototype.loadDiff = function(from, to, relations, postLoadCallback,
     }
     dateRange = '"' + mindate + '"' + maxdate;
 
-    var data_url = 'http://overpass-api.de/api/interpreter';
+    var data_url = 'https://overpass-api.de/api/interpreter';
     url = data_url + '?data=[adiff:' + dateRange
         + '];(node(bbox)(changed);way(bbox)(changed);' + (relations ? 'relation(bbox)(changed);' : '') + ');out meta geom(bbox);';
 

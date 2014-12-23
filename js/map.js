@@ -20,13 +20,18 @@
         // OSM zoom levels: 0-18
         var serverResolutions = resolutions.slice(0, 19);
 
-        var osm = new OpenLayers.Layer.OSM(null, null, {
+        var url = [
+            'https://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
+            'https://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
+            'https://c.tile.openstreetmap.org/${z}/${x}/${y}.png'
+        ];
+        var osm = new OpenLayers.Layer.OSM(null, url, {
             wrapDateLine: false,
             opacity : 0.2,
             resolutions : resolutions,
-            serverResolutions : serverResolutions
+            serverResolutions : serverResolutions,
+            attribution: "tiles &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
         });
-        osm.attribution = 'tiles ' + osm.attribution;  
         map.addLayer(osm);
 
         // empty layer (~ no base layer)
@@ -88,7 +93,7 @@
             styleMap : styleMaps.changes,
             renderers : renderers,
             rendererOptions: { zIndexing: true },
-            attribution: 'data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
+            attribution: 'data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
                 + 'licensed under <a href="http://opendatacommons.org/licenses/odbl/">ODbL</a>'
         });
 
@@ -257,7 +262,7 @@
         }
 
         loader.GET({
-            url: 'http://www.openstreetmap.org/api/0.6/changeset/' + id, 
+            url: 'https://www.openstreetmap.org/api/0.6/changeset/' + id, 
             zoomToExtent: true,
             postLoadCallback: handleChangeset
         });
