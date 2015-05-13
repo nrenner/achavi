@@ -262,8 +262,7 @@ var oscviewer = (function() {
     }
 
     function formatOsmLink(val, type) {
-        var path = (type === 'user') ? '' : 'browse/';
-        return '<a href="https://www.openstreetmap.org/' + path + type + '/' + val + '" target="_blank">' + val + '</a>';
+        return '<a href="https://www.openstreetmap.org/' + type + '/' + val + '" target="_blank">' + val + '</a>';
     }
 
     function printChangesetMeta(tags) {
