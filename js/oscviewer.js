@@ -262,7 +262,8 @@ var oscviewer = (function() {
     }
 
     function formatOsmLink(val, type) {
-        return '<a href="https://www.openstreetmap.org/' + type + '/' + val + '" target="_blank">' + val + '</a>';
+        return '<a href="https://www.openstreetmap.org/' + type + '/' + xssFilters.uriPathInDoubleQuotedAttr(val) 
+                + '" target="_blank">' + xssFilters.inHTMLData(val) + '</a>';
     }
 
     function printChangesetMeta(tags) {
@@ -316,7 +317,7 @@ var oscviewer = (function() {
             oldVal = oldTags && oldTags[key];
             changeVal = changeTags && changeTags[key];
             classes = (oldTags && changeTags && coloring) ? getClasses(oldVal, changeVal, action) : getDefaultClasses();
-            infoHtml += '<tr><td class="tagkey ' + classes.key + '">' + key + '</td>';
+            infoHtml += '<tr><td class="tagkey ' + classes.key + '">' + xssFilters.inHTMLData(key) + '</td>';
             if (oldTags) {
                 infoHtml += '<td class="' + classes.old + '">' + val(oldVal) + '</td>';
             }
@@ -360,7 +361,7 @@ var oscviewer = (function() {
     }
 
     function val(value) {
-        return _.isUndefined(value) ? '' : value;
+        return _.isUndefined(value) ? '' : xssFilters.inHTMLData(value);
     }
 
     return {

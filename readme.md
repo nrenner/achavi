@@ -27,6 +27,7 @@ script URL in index.html.
 * [OpenLayers](http://www.openlayers.org/): Copyright (c) 2005-2012 OpenLayers [Contributors](licenses/openlayers-authors.txt), [2-clause BSD License](licenses/openlayers-license.txt)
 * [Underscore.js](http://underscorejs.org/): Copyright (c) 2009-2012 Jeremy Ashkenas, DocumentCloud, [MIT License](licenses/underscorejs-LICENSE)
 * [Moment.js](http://momentjs.com/): Copyright (c) 2011-2012 Tim Wood, [MIT License](licenses/momentjs-LICENSE)
+* [Yahoo! Secure XSS Filters](https://github.com/yahoo/xss-filters): Copyright (c) 2015, Yahoo! Inc., [Yahoo BSD license](https://github.com/yahoo/xss-filters/blob/master/LICENSE)
 
 * loadinggif-4.gif by http://loadinggif.com/
 * [layer-switcher-minimize.png](https://github.com/nrenner/openlayers_themes): Copyright (c) 2010, Development Seed, Inc., [3-clause BSD License](licenses/openlayers_themes-LICENSE.txt)
