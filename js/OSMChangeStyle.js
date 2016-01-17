@@ -34,7 +34,7 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
         
         //dummy values to test for unmatched features
         strokeColor : "#FF00FF",
-        strokeWidth : 4,
+        strokeWidth : 5,
         strokeOpacity : 1.0,
         fillColor : 'orange'
     }, {
@@ -45,7 +45,7 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
 
         //dummy values to test for unmatched features
         strokeColor : "#FF00FF",
-        strokeWidth: 4,
+        strokeWidth: 5,
         strokeOpacity : 1.0
     }, {
         context : context
@@ -106,28 +106,28 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
     rules.push(rule("osmType = 'changeset'", {
         symbolizer: {
             strokeColor: '#ee9900',
-            strokeWidth: 4,
+            strokeWidth: 5,
             strokeOpacity : 0.3
         }
     }));
 
     rules.push(rule("osmType = 'relation'", {
         symbolizer: {
-            strokeWidth: 10,
+            strokeWidth: 11,
             strokeOpacity : 0.4,
             fillOpacity : 0.1
         }
     }));
     rules.push(rule("osmType = 'relation'", {
         symbolizer: {
-            strokeWidth: 6,
+            strokeWidth: 7,
             strokeOpacity : 0.3
         },
         minScaleDenominator: getScaleFromZoom(18)
     }));
     rules.push(rule("osmType = 'relation'", {
         symbolizer: {
-            strokeWidth: 4,
+            strokeWidth: 5,
             strokeOpacity : 0.2
         },
         minScaleDenominator: getScaleFromZoom(15)
@@ -135,7 +135,7 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
 
     rules.push(rule("osmType = 'way'", {
         symbolizer: {
-            strokeWidth: 2,
+            strokeWidth: 3,
             strokeOpacity : 1.0,
             fillOpacity : 0.2
         }
@@ -149,7 +149,7 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
     }));
     rules.push(rule("osmType = 'way'", {
         symbolizer: {
-            strokeWidth: 1.5,
+            strokeWidth: 2.5,
             fillOpacity : 0.1
         },
         minScaleDenominator: getScaleFromZoom(10)
@@ -159,7 +159,7 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
         graphicName: "square",
         pointRadius: 3,
         fillOpacity: 1,
-        strokeWidth: 1,
+        strokeWidth: 2,
         strokeColor: 'black' // '#666'  'rgba(255, 255, 255, 0.4)'
     };
     rules.push(rule("osmType = 'node' AND hasTags = 'false'", {
@@ -168,7 +168,7 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
     rules.push(rule("osmType = 'node' AND hasTags = 'false'", {
         symbolizer: {
             pointRadius: 2,
-            strokeWidth: 0.5
+            strokeWidth: 1.5
         },
         minScaleDenominator: getScaleFromZoom(17)
     }));
@@ -199,14 +199,14 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
             graphicName: "circle",
             pointRadius: 4,
             fillOpacity: 1,
-            strokeWidth: 1,
+            strokeWidth: 2,
             strokeColor: 'black'
         }
     }));
     rules.push(rule("osmType = 'node' AND hasTags = 'true'", {
         symbolizer: {
             pointRadius: 3,
-            strokeWidth: 0.5
+            strokeWidth: 1.5
         },
         minScaleDenominator: getScaleFromZoom(15)
     }));
@@ -241,20 +241,20 @@ OSMChangeStyle.prototype.getStyleMaps = function() {
 
     rulesSelect.push(rule("osmType = 'way'", {
         symbolizer: {
-            strokeWidth: 3,
+            strokeWidth: 4,
             strokeColor: 'white'
         }
     }));
     rulesSelect.push(rule("osmType = 'way'", {
         symbolizer: {
-            strokeWidth: 2
+            strokeWidth: 3
         },
         minScaleDenominator: getScaleFromZoom(15)
     }));
 
     rulesSelect.push(rule("osmType = 'node'", {
         symbolizer: {
-            strokeWidth: 1.5,
+            strokeWidth: 2.5,
             strokeColor: 'white'
         }
     }));
