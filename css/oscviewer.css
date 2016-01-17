@@ -221,7 +221,7 @@ position: relative;
 .control_input {
     margin-right: 0px;
 }
-.control_input > input {
+.control_input > input,.control_input > textarea {
     width: 8em;
     height: 15px;
     font-size: 13px;
@@ -231,6 +231,10 @@ position: relative;
     outline: none;
     color: black;
     background-color: rgba(0, 0, 0, 0);
+}
+.control_input > textarea {
+    width: 24em;
+    overflow:hidden;
 }
 .control_checkbox {
     margin-right: 0px;
