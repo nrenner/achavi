@@ -104,7 +104,7 @@ OverpassAPI.prototype.load = function(sequence, postLoadCallback) {
     }
 };
 
-OverpassAPI.prototype.loadDiff = function(from, to, relations, postLoadCallback, changeset) {
+OverpassAPI.prototype.loadDiff = function(from, to, relations, query, postLoadCallback, changeset) {
     var mindate = moment.utc(from).format('YYYY-MM-DDTHH:mm:ss\\Z'),
         maxdate = to ? moment.utc(to).format('YYYY-MM-DDTHH:mm:ss\\Z') : '',
         bboxParam,
@@ -117,9 +117,14 @@ OverpassAPI.prototype.loadDiff = function(from, to, relations, postLoadCallback,
     }
     dateRange = '"' + mindate + '"' + maxdate;
 
-    var data_url = 'https://overpass-api.de/api/interpreter';
+    var data_url = 'https://overpass-api.de/api/interpreter';    
+    if(!query) {
+        query = '(node(bbox)(changed);way(bbox)(changed);' + (relations ? 'relation(bbox)(changed);' : '') + ');';
+    }
+    query = query.replace(/(\r\n|\n|\r)/gm,"");
+    query = query.replace(/\{\{bbox\}\}/gm,"bbox");
     url = data_url + '?data=[adiff:' + dateRange
-        + '];(node(bbox)(changed);way(bbox)(changed);' + (relations ? 'relation(bbox)(changed);' : '') + ');out meta geom(bbox);';
+        + '];' + query + 'out meta geom(bbox);';
 
     if (!this.bbox) {
       this.bbox = this.bboxControl.addBBoxFromViewPort();

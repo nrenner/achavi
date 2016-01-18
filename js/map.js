@@ -240,7 +240,7 @@
         }
 
         function handleChangeset() {
-            var csFeature, cs, bbox, xhr, from, to, relations;
+            var csFeature, cs, bbox, xhr, from, to, relations, query;
 
             csFeature = changesets.getFeatureByFid('changeset.' + id);
             if (csFeature) {
@@ -256,7 +256,7 @@
                 overpassAPI.bbox = bbox;
 
                 relations = document.getElementById('relations').checked;
-                xhr = overpassAPI.loadDiff(from, to, relations, handleDiff, id);
+                xhr = overpassAPI.loadDiff(from, to, relations, query, handleDiff, id);
                 loading.loadStart(xhr);
             }
         }
