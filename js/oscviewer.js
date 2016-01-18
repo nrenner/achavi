@@ -174,10 +174,12 @@ var oscviewer = (function() {
         var keys = [];
         var oldTags = undefined;
         var changeTags = undefined;
-        var feature = changeFeature || oldFeature;
+        var feature = changeFeature || oldFeature;         
+        var boundsLatLon = feature.geometry.bounds.clone().transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
         var osm = {
             id : feature.osm_id,
-            type : getOsmType(feature)
+            type : getOsmType(feature),
+            bounds : boundsLatLon
         };
         var action = feature.attributes['action'] || '';
         var tagColoring = !feature.scopeAction; // no tag comparison when one feature out of scope
@@ -238,6 +240,13 @@ var oscviewer = (function() {
         infoHtml += printKeys(keys, oldTags, changeTags, action, tagColoring);
 
         infoHtml += '</table>';
+        if (osm.bounds.right) {
+            infoHtml += '<div class="footer">';
+            var josmUrl = 'http://127.0.0.1:8111/zoom?left=' + osm.bounds.left + '&right=' + osm.bounds.right + '&top=' + osm.bounds.top + '&bottom=' + osm.bounds.bottom + '&select=' + osm.type + osm.id;
+            var sendJosmRemoteScript = 'var xhttp = new XMLHttpRequest(); xhttp.open(\'GET\', \'' + josmUrl + '\', true); xhttp.send(); this.innerHTML = xhttp.response; return false;';
+            infoHtml += '<a id="josmRemote" onClick="' + sendJosmRemoteScript + '" href="' + josmUrl + '" >select in JOSM</a> <br/>';
+            infoHtml += '</div>';
+        }        
         infoHtml += '</div>';
         infoHtml += '</div>';
 
