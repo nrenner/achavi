@@ -242,7 +242,7 @@ var oscviewer = (function() {
         if (feature.geometry.bounds && feature.geometry.bounds.right) {
             bounds = feature.geometry.bounds.clone().transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
             infoHtml += '<div class="footer">';
-            var josmUrl = 'http://127.0.0.1:8111/zoom?left=' + bounds.left + '&right=' + bounds.right + '&top=' + bounds.top + '&bottom=' + bounds.bottom + '&select=' + osm.type + osm.id;
+            var josmUrl = 'http://127.0.0.1:8111/load_and_zoom?left=' + bounds.left + '&right=' + bounds.right + '&top=' + bounds.top + '&bottom=' + bounds.bottom + '&select=' + osm.type + osm.id;
             var sendJosmRemoteScript = 'var xhttp = new XMLHttpRequest(); xhttp.open(\'GET\', \'' + josmUrl + '\', true); xhttp.send(); this.innerHTML = xhttp.response; return false;';
             infoHtml += '<a id="josmRemote" onClick="' + sendJosmRemoteScript + '" href="' + josmUrl + '" >select in JOSM</a> <br/>';
             infoHtml += '</div>';
