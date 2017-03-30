@@ -67,6 +67,8 @@ function PopupHandler(map, old, changes) {
 
         feature.popup = popup;
         map.addPopup(popup);
+   
+        oscviewer.attachInfoHtmlListeners();
     };
 
     this.onFeatureUnselect = function(feature) {

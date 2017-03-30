@@ -243,14 +243,33 @@ var oscviewer = (function() {
             bounds = feature.geometry.bounds.clone().transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
             infoHtml += '<div class="footer">';
             var josmUrl = 'http://127.0.0.1:8111/load_and_zoom?left=' + bounds.left + '&right=' + bounds.right + '&top=' + bounds.top + '&bottom=' + bounds.bottom + '&select=' + osm.type + osm.id;
-            var sendJosmRemoteScript = 'var xhttp = new XMLHttpRequest(); xhttp.open(\'GET\', \'' + josmUrl + '\', true); xhttp.send(); this.innerHTML = xhttp.response; return false;';
-            infoHtml += '<a id="josmRemote" onClick="' + sendJosmRemoteScript + '" href="' + josmUrl + '" >select in JOSM</a> <br/>';
+            infoHtml += '<a id="josmRemote" target="_blank" href="' + josmUrl + '" >select in JOSM</a> <br/>';
             infoHtml += '</div>';
         }        
         infoHtml += '</div>';
         infoHtml += '</div>';
 
         return infoHtml;
+    }
+
+    function attachInfoHtmlListeners() {
+        var josmRemote = document.getElementById('josmRemote');
+        var url = josmRemote.href;
+        var clickHandler = function(evt) {
+            evt.preventDefault();
+
+            var xhr = new XMLHttpRequest(); 
+            xhr.open('GET', url); 
+            xhr.onerror = function(e) {
+                console.error('Error connecting to JOSM, url: ' + url);
+                alert('Error connecting to JOSM:\n\nIs JOSM running and Remote Control enabled?');
+            };
+            xhr.send(); 
+
+            return false;
+        };
+
+        josmRemote.onclick = clickHandler;
     }
 
     function getOsmType(feature) {
@@ -376,6 +395,7 @@ var oscviewer = (function() {
     return {
         setActions : setActions,
         getInfoHtml: getInfoHtml,
+        attachInfoHtmlListeners: attachInfoHtmlListeners,
         getOsmType: getOsmType,
         formatIsoDateTime: formatIsoDateTime,
         isChanged: isChanged
