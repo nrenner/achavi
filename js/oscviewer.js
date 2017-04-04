@@ -175,7 +175,6 @@ var oscviewer = (function() {
         var oldTags = undefined;
         var changeTags = undefined;
         var feature = changeFeature || oldFeature;         
-        var bounds;
         var osm = {
             id : feature.osm_id,
             type : getOsmType(feature)
@@ -239,37 +238,60 @@ var oscviewer = (function() {
         infoHtml += printKeys(keys, oldTags, changeTags, action, tagColoring);
 
         infoHtml += '</table>';
-        if (feature.geometry.bounds && feature.geometry.bounds.right) {
-            bounds = feature.geometry.bounds.clone().transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
-            infoHtml += '<div class="footer">';
-            var josmUrl = 'http://127.0.0.1:8111/load_and_zoom?left=' + bounds.left + '&right=' + bounds.right + '&top=' + bounds.top + '&bottom=' + bounds.bottom + '&select=' + osm.type + osm.id;
-            infoHtml += '<a id="josmRemote" target="_blank" href="' + josmUrl + '" >select in JOSM</a> <br/>';
-            infoHtml += '</div>';
-        }        
+
+        infoHtml += getEditFooter(feature, osm);
+
         infoHtml += '</div>';
         infoHtml += '</div>';
 
         return infoHtml;
     }
 
-    function attachInfoHtmlListeners() {
-        var josmRemote = document.getElementById('josmRemote');
-        var url = josmRemote.href;
-        var clickHandler = function(evt) {
-            evt.preventDefault();
+    function getEditFooter(feature, osm){
+        var footerHtml = '';
+        if (feature.geometry.bounds && feature.geometry.bounds.right) {
+            var bounds = feature.geometry.bounds.clone().transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
+            var boundsParams = OpenLayers.String.format('left=${left}&right=${right}&top=${top}&bottom=${bottom}', bounds);
 
-            var xhr = new XMLHttpRequest(); 
-            xhr.open('GET', url); 
-            xhr.onerror = function(e) {
-                console.error('Error connecting to JOSM, url: ' + url);
-                alert('Error connecting to JOSM:\n\nIs JOSM running and Remote Control enabled?');
+            var josmBaseUrl = 'http://127.0.0.1:8111/';
+            var josmLoadUrl = josmBaseUrl + 'load_object?objects=' + osm.type.substr(0,1) + osm.id;
+            var josmSelectUrl = josmBaseUrl + 'zoom?' + boundsParams + '&select=' + osm.type + osm.id;
+
+            footerHtml += '<div class="footer">';
+            footerHtml += '<a id="josmLoad" target="_blank" href="' + josmLoadUrl + '" >load</a>';
+            footerHtml += ' / ';
+            footerHtml += '<a id="josmSelect" target="_blank" href="' + josmSelectUrl + '" >select</a>';
+            footerHtml += ' in JOSM';
+            footerHtml += '</div>';
+        }
+        return footerHtml;
+    }
+
+    function attachJosmRemoteListener(id) {
+        var josmRemote = document.getElementById(id);
+        if (josmRemote) {
+            var url = josmRemote.href;
+            var clickHandler = function(evt) {
+                evt.preventDefault();
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url);
+                xhr.onerror = function(e) {
+                    console.error('Error connecting to JOSM, url: ' + url);
+                    alert('Error connecting to JOSM:\n\nIs JOSM running and Remote Control enabled?');
+                };
+                xhr.send();
+
+                return false;
             };
-            xhr.send(); 
 
-            return false;
-        };
+            josmRemote.onclick = clickHandler;
+        }
+    }
 
-        josmRemote.onclick = clickHandler;
+    function attachInfoHtmlListeners() {
+        attachJosmRemoteListener('josmLoad');
+        attachJosmRemoteListener('josmSelect');
     }
 
     function getOsmType(feature) {
