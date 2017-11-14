@@ -36,7 +36,7 @@ FormatRegistry.prototype.getFormatType = function(doc) {
     // special cases with common root node name but different content 
     if (type === 'osm') {
         var generatorAttribute = doc.documentElement.getAttribute('generator');
-        if (generatorAttribute && generatorAttribute === 'Overpass API') {
+        if (generatorAttribute && generatorAttribute.indexOf('Overpass API') === 0) {
             type = 'osmDiff';
         } else {
             var node = doc.documentElement.firstChild;
