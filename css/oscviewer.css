@@ -40,7 +40,7 @@ position: relative;
     width: 10px;
     height: 10px;
     margin: 6px;
-    background-image: url(../lib/openlayers/img/layer-switcher-minimize.png);
+    background-image: url(https://cdnjs.cloudflare.com/ajax/libs/openlayers/2.13.1/img/layer-switcher-minimize.png);
 }
 /*
 #bbox_button, #live_button  {
