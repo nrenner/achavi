@@ -41,6 +41,8 @@
     }
 
     function init() {
+        OpenLayers.ImgPath = "img/";
+
         var styleMaps;
         var options = {
             div : "map_div",
