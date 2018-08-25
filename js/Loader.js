@@ -81,6 +81,21 @@ Loader.prototype.handleLoad = function(doc, fileNameOrUrl, options) {
                 } 
                 console.log(obj.timestamp);
             } else if (desc.type === 'osmDiff') {
+                var remarks = doc.getElementsByTagName('remark')
+                if (remarks && remarks.length) {
+                    var remark = remarks[0].textContent;
+                    if (remark.match(/runtime error/)) {
+                        this.failure({
+                            config: {},
+                            requestUrl: desc.type,
+                            request: {
+                                status: 'error',
+                                statusText: remark
+                            }
+                        });
+                        alert(desc.type + ': '+ remark);
+                    }
+                }
                 format.extent = null;
                 features = format.read(doc);
 
