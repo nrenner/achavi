@@ -239,7 +239,9 @@ var oscviewer = (function() {
 
         infoHtml += '</table>';
 
-        infoHtml += getEditFooter(feature, osm);
+        if (osm.type !== 'changeset') {
+            infoHtml += getEditFooter(feature, osm);
+        }
 
         infoHtml += '</div>';
         infoHtml += '</div>';
