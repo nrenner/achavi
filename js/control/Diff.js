@@ -10,6 +10,11 @@ function Diff(overpassAPI, loading, status) {
     this.eleRelations = document.getElementById('relations');
     this.eleQuery = document.getElementById('query');
 
+    // disable feature on prod until issue #34 is resolved (Custom query #18 follow-up)
+    if (document.location.hostname !== "overpass-api.de") {
+        this.eleQuery.parentElement.hidden = false;
+    }
+
     this.lastVisit = this.getLastVisit();
     if (this.lastVisit) {
         this.setDateTimeToLastVisit();
