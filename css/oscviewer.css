@@ -298,9 +298,8 @@ position: relative;
 
 .info .footer {
 	position:relative;
-	float: right;
+	text-align: center;
 	margin-top: 5px;
-	padding-right: 5px;
 }
 
 .warning {

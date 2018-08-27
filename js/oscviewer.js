@@ -263,7 +263,8 @@ var oscviewer = (function() {
             footerHtml += '<a id="josmLoad" target="_blank" href="' + josmLoadUrl + '" >load</a>';
             footerHtml += ' / ';
             footerHtml += '<a id="josmSelect" target="_blank" href="' + josmSelectUrl + '" >select</a>';
-            footerHtml += ' in JOSM';
+            footerHtml += ' in JOSM, ';
+            footerHtml += '<a target="_blank" rel="noopener" href="https://www.openstreetmap.org/edit?editor=id&' + osm.type + '=' + osm.id + '" >edit</a> in iD';
             footerHtml += '</div>';
         }
         return footerHtml;
