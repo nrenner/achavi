@@ -12,7 +12,7 @@ See [olex](https://github.com/nrenner/olex) repository for OpenLayers-related so
 
 ## License
 
-Copyright (c) 2014 Norbert Renner, licensed under the [MIT License (MIT)](LICENSE)
+Copyright (c) 2018 Norbert Renner and [contributors](https://github.com/nrenner/achavi/graphs/contributors), licensed under the [MIT License (MIT)](LICENSE)
 
 ## Install
 
