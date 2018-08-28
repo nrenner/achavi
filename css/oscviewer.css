@@ -218,6 +218,10 @@ position: relative;
     background-color: rgba(0, 0, 0, 0.5) !important;
 }
 */
+
+.control_input,.control_checkbox {
+    height: 21px;
+}
 .control_input {
     margin-right: 0px;
 }
@@ -246,6 +250,8 @@ position: relative;
 .control_checkbox > input[type=checkbox] {
     /* normalize Firefox (14px) and Chrome (13px) + 1 for alignment */
     height: 15px;
+    /* Firefox now 18px, not resizable, so downscale for now */
+    -moz-transform: scale(0.8);
 }
 .inner_label {
     float: left;
