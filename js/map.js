@@ -28,6 +28,7 @@
         var osm = new OpenLayers.Layer.OSM(null, url, {
             wrapDateLine: false,
             opacity : 0.2,
+            transitionEffect: 'map-resize',
             resolutions : resolutions,
             serverResolutions : serverResolutions,
             attribution: "tiles &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
