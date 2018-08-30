@@ -21,6 +21,16 @@ body,#map_div,.info,.info td,#info,#info td,#legend,#about,.text_content {
     color: grey;
 }
 
+.pale {
+    filter: saturate(30%) brightness(0.3);
+}
+.gray {
+    filter: grayscale(100%) brightness(0.4);
+}
+.inverted {
+    filter: grayscale(100%) invert(80%) brightness(0.5);
+}
+
 .hidden {
     display: none;	
 }

@@ -17,23 +17,34 @@
 
         // reuse Bing resolutions 0-21 as client layer resolutions
         var resolutions = OpenLayers.Layer.Bing.prototype.serverResolutions;
-        // OSM zoom levels: 0-18
-        var serverResolutions = resolutions.slice(0, 19);
+        // OSM zoom levels: 0-19
+        var serverResolutions = resolutions.slice(0, 20);
 
         var url = [
             'https://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
             'https://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
             'https://c.tile.openstreetmap.org/${z}/${x}/${y}.png'
         ];
-        var osm = new OpenLayers.Layer.OSM(null, url, {
+        var opts = {
             wrapDateLine: false,
-            opacity : 0.2,
             transitionEffect: 'map-resize',
             resolutions : resolutions,
             serverResolutions : serverResolutions,
             attribution: "tiles &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-        });
-        map.addLayer(osm);
+        };
+        map.addLayer(new OpenLayers.Layer.OSM('OSM dark', url, _.extend({}, opts, {opacity : 0.2})));
+        map.addLayer(new OpenLayers.Layer.OSM('OSM pale', url, _.extend({}, opts, {className: 'pale'})));
+        map.addLayer(new OpenLayers.Layer.OSM('OSM gray', url, _.extend({}, opts, {className: 'gray'})));
+        map.addLayer(new OpenLayers.Layer.OSM('OSM inverted', url, _.extend({}, opts, {className: 'inverted'})));
+        map.addLayer(new OpenLayers.Layer.OSM('OSM', url, opts));
+
+        map.addLayer(new OpenLayers.Layer.OSM('Carto Dark Matter', [
+            'https://a.basemaps.cartocdn.com/rastertiles/dark_all/${z}/${x}/${y}.png',
+            'https://b.basemaps.cartocdn.com/rastertiles/dark_all/${z}/${x}/${y}.png',
+            'https://c.basemaps.cartocdn.com/rastertiles/dark_all/${z}/${x}/${y}.png'
+        ], _.extend({}, opts, {
+            attribution: 'tiles by <a href="https://carto.com/location-data-services/basemaps/">Carto</a>, under CC BY 3.0.'
+        })));
 
         // empty layer (~ no base layer)
         map.addLayer(new OpenLayers.Layer("blank", {
