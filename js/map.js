@@ -21,9 +21,7 @@
         var serverResolutions = resolutions.slice(0, 19);
 
         var url = [
-            'https://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
-            'https://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
-            'https://c.tile.openstreetmap.org/${z}/${x}/${y}.png'
+            'https://tile.openstreetmap.org/${z}/${x}/${y}.png'
         ];
         var osm = new OpenLayers.Layer.OSM(null, url, {
             wrapDateLine: false,
