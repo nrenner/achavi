@@ -274,7 +274,7 @@
         }
 
         loader.GET({
-            url: 'https://www.openstreetmap.org/api/0.6/changeset/' + id, 
+            url: 'https://api.openstreetmap.org/api/0.6/changeset/' + id, 
             zoomToExtent: true,
             postLoadCallback: handleChangeset
         });
